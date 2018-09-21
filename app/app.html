@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Konjure Website Builder</title>
+    <script>
+      (function() {
+        if (!process.env.HOT) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = './dist/style.css';
+          // HACK: Writing the script path should be done with webpack
+          document.getElementsByTagName('head')[0].appendChild(link);
+        }
+      }());
+    </script>
+    <link rel="stylesheet" href="https://dist.konjure.org/konjure-ui.min.css" type="text/css"/>
+  </head>
+  <body>
+    <script>
+      // This file is required by the index.html file and will
+      // be executed in the renderer process for that window.
+      // All of the Node.js APIs are available in this process.
+      'use strict';
+
+      const remote = require('electron').remote;
+
+      (function handleWindowControls() {
+        // When document has loaded, initialise
+        document.onreadystatechange = () => {
+          if (document.readyState === "complete") {
+            init();
+          }
+        };
+
+        function init() {
+          let window = remote.getCurrentWindow();
+          const minButton = document.getElementById('min'),
+            maxButton = document.getElementById('max'),
+            restoreButton = document.getElementById('restore'),
+            closeButton = document.getElementById('close');
+
+          minButton.addEventListener("click", event => {
+            window = remote.getCurrentWindow();
+            window.minimize();
+          });
+
+          maxButton.addEventListener("click", event => {
+            window = remote.getCurrentWindow();
+            window.maximize();
+            toggleMaxRestoreButtons();
+          });
+
+          restoreButton.addEventListener("click", event => {
+            window = remote.getCurrentWindow();
+            window.unmaximize();
+            toggleMaxRestoreButtons();
+          });
+
+          // Toggle maximise/restore buttons when maximisation/unmaximisation
+          // occurs by means other than button clicks e.g. double-clicking
+          // the title bar:
+          toggleMaxRestoreButtons();
+          window.on('maximize', toggleMaxRestoreButtons);
+          window.on('unmaximize', toggleMaxRestoreButtons);
+
+          closeButton.addEventListener("click", event => {
+            window = remote.getCurrentWindow();
+            window.close();
+          });
+
+          function toggleMaxRestoreButtons() {
+            window = remote.getCurrentWindow();
+            if (window.isMaximized()) {
+              maxButton.style.display = "none";
+              restoreButton.style.display = "flex";
+            } else {
+              restoreButton.style.display = "none";
+              maxButton.style.display = "flex";
+            }
+          }
+        }
+      })();
+    </script>
+
+    <div class="k-toolbar no-select">
+      <img src="res/image/konjure.png"/>
+      <div class="k-toolbar-right">
+        <div class="k-toolbar-button" id="min">
+          <img src="res/image/window/minimize.png"/>
+        </div>
+        <div class="k-toolbar-button" id="max">
+          <img src="res/image/window/maximize.png"/>
+        </div>
+        <div class="k-toolbar-button" id="restore">
+          <img src="res/image/window/maximize.png"/>
+        </div>
+        <div class="k-toolbar-button" id="close">
+          <img src="res/image/window/close.png"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="k-wrapper">
+      <div class="k-nav">
+        <div class="k-menu">
+          <div class="button k-option material active no-select current">Gateway<br><span>Upload your site</span>
+            <div class="k-status waiting"></div>
+          </div>
+          <div class="button k-option material active no-select">Node<br><span>Peer-to-peer network</span>
+            <div class="k-status waiting"></div>
+          </div>
+          <div class="button k-option inactive no-select">Dashboard<br><span>Manage your site</span>
+            <div class="k-status down"></div>
+          </div>
+          <div class="button k-option inactive no-select">Bazaar<br><span>Plugin marketplace</span>
+            <div class="k-status down"></div>
+          </div>
+          <div class="button k-option inactive no-select">Hosting<br><span>Usage and billing</span>
+            <div class="k-status down"></div>
+          </div>
+          <div class="button k-option inactive no-select">Labs<br><span>Development kit</span>
+            <div class="k-status down"></div>
+          </div>
+          <br>
+          <div class="k-copyright">Konjure Desktop App v0.1.0</div>
+        </div>
+        <div class="button k-profile material slight-rounded">
+          <img src="res/image/placeholder-profile.png" class="no-select"/>
+          <h5><img src="res/image/currency.png" class="no-select"/> 0</h5>
+        </div>
+      </div>
+      <div class="k-sandbox">
+        <div class="k-content gateway current">
+          <div class="k-gateway-frame">
+            <div class="k-website"></div>
+            <img src="res/image/ghost.svg" class="no-select"/>
+          </div>
+          <div class="k-gateway-toolbar">
+            <label for="site-upload"
+                   class="button k-gateway-button slight-rounded material no-select upload-button left">
+              <div>Upload your website (.zip)</div>
+            </label>
+            <input id="site-upload" type="file"
+                   accept="application/zip,application/x-zip,application/x-zip-compressed"/>
+            <div class="button k-gateway-button material slight-rounded no-select publish-button right disabled">
+              Publish
+            </div>
+            <div class="button k-gateway-button material slight-rounded no-select cancel-button right disabled">
+              Cancel
+            </div>
+          </div>
+        </div>
+        <div class="k-content node">
+          <div class="k-node-top">
+            <div class="vertical-center-outer">
+              <div class="vertical-center-inner">
+                <h1 class="left">Konjure Node</h1>
+                <label class="switch">
+                  <input type="checkbox">
+                  <span class="node-slider round"></span>
+                </label>
+                <h4 class="node-status left">OFF</h4>
+              </div>
+            </div>
+          </div>
+          <div class="k-node-left">
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <h4>CPU & GPU</h4>
+                  <h6>Select how much available CPU & GPU you would like Konjure to use:</h6>
+                  <br><br>
+                  <div class="slider cpu"></div>
+                </div>
+              </div>
+            </div>
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <h4>MEMORY</h4>
+                  <h6><span>16GB</span> of RAM is available. Select how much you would like Konjure to use:
+                  </h6>
+                  <br><br>
+                  <div class="slider ram"></div>
+                </div>
+              </div>
+            </div>
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <h4>NETWORK</h4>
+                  <h6><span>50Mbps</span> of network speed is available. Select how much you would like
+                    Konjure to use:</h6>
+                  <br><br>
+                  <div class="slider network"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="k-node-right">
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <input class="display-amount" id="cpu-amount" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <input class="display-amount" id="ram-amount" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="k-slider">
+              <div class="vertical-center-outer">
+                <div class="vertical-center-inner">
+                  <input class="display-amount" id="network-amount" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      {
+        const scripts = [];
+
+        // Dynamically insert the DLL script in development env in the
+        // renderer process
+        if (process.env.NODE_ENV === 'development') {
+          scripts.push('../dll/renderer.dev.dll.js');
+        }
+
+        // Dynamically insert the bundled app script in the renderer process
+        const port = process.env.PORT || 1212;
+        scripts.push(
+          (process.env.HOT)
+            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+            : './dist/renderer.prod.js'
+        );
+
+        document.write(
+          scripts
+            .map(script => `<script defer src="${script}"><\/script>`)
+            .join('')
+        );
+      }
+    </script>
+  </body>
+</html>
