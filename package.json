@@ -49,8 +49,11 @@
     "appId": "org.konjure.desktopapp",
     "files": [
       "dist/",
+      "res/",
+      "splash/",
       "node_modules/",
       "app.html",
+      "konjure-ui.min.css",
       "main.prod.js",
       "main.prod.js.map",
       "package.json"

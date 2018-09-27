@@ -80,17 +80,14 @@ body {
 .k-content {
   height: 100%;
   width: 100%;
-  display: none;
-}
-
-.k-content.current {
   display: inline;
 }
 
 .k-gateway-frame {
   height: calc(100% - 65px);
   width: 100%;
-  position: relative;
+  position: fixed;
+  overflow: hidden;
 }
 
 .k-gateway-frame > img {
@@ -103,11 +100,12 @@ body {
 .k-gateway-toolbar {
   height: 65px;
   width: 100%;
-  position: relative;
+  position: absolute;
   background-color: #2a2a2a;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
   padding: 12.5px 12.5px 0px 12.5px;
+  bottom: 0px;
 }
 
 .k-gateway-toolbar-after {

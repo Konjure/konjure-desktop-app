@@ -78,7 +78,7 @@ app.on('ready', async () => {
     minWidth: 1000,
     height: 600,
     minHeight: 500,
-    icon: 'icon.png',
+    icon: path.join(__dirname, 'res', 'image', 'window', 'icon.png'),
     darkTheme: true,
     show: false,
     frame: false
