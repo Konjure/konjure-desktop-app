@@ -14,6 +14,7 @@ import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 
 const path = require('path');
+const i18n = require('i18n');
 
 let mainWindow = null;
 let splashWindow = null;
@@ -54,14 +55,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
-    await installExtensions();
-  }
-
+function buildWindows () {
   splashWindow = new BrowserWindow({
     width: 340,
     height: 510,
@@ -87,12 +81,8 @@ app.on('ready', async () => {
   splashWindow.loadURL(path.join(`file://${__dirname}`, 'splash', 'splash.html'));
   mainWindow.loadURL(path.join(`file://${__dirname}`, 'app.html'));
 
-  mainWindow.webContents.openDevTools();
-
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
-    setTimeout(function() {
+    setTimeout(function () {
       if (!mainWindow) {
         throw new Error('"mainWindow" is not defined');
       }
@@ -106,6 +96,21 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+}
+
+app.on('ready', async () => {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    await installExtensions();
+  }
+
+  i18n.configure({
+    directory: path.join(__dirname, 'languages')
+  });
+
+  buildWindows();
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

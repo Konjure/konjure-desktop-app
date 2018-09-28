@@ -14,15 +14,21 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div onDragOver={event => {
+        event.preventDefault();
+        return false;
+      }} onDrop={event => {
+        event.preventDefault();
+        return false;
+      }}>
         <WindowControls/>
         <Navigation tabs={[
-          {name: 'Gateway', description: 'Upload your site', usable: true, current: true, map: routes.GATEWAY},
-          {name: 'Node', description: 'Peer-to-peer network', usable: true, map: routes.NODE},
-          {name: 'Dashboard', description: 'Manage your site', usable: false},
-          {name: 'Bazaar', description: 'Plugin marketplace', usable: false},
-          {name: 'Hosting', description: 'Usage and billing', usable: false},
-          {name: 'Labs', description: 'Development kit', usable: false}
+          {name: 'gateway', usable: true, current: true, map: routes.GATEWAY},
+          {name: 'node', usable: true, map: routes.NODE},
+          {name: 'dashboard', usable: false},
+          {name: 'bazaar', usable: false},
+          {name: 'hosting', usable: false},
+          {name: 'labs', usable: false}
         ]}/>
         <Switch>
           <Route path={routes.NODE} component={CounterPage}/>

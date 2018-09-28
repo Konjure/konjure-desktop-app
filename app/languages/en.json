@@ -1,0 +1,40 @@
+{
+	"navigation": {
+		"gateway": {
+			"title": "Gateway",
+			"description": "Upload your site"
+		},
+		"node": {
+			"title": "Node",
+			"description": "Peer-to-peer network"
+		},
+		"dashboard": {
+			"title": "Dashboard",
+			"description": "Manage your site"
+		},
+		"bazaar": {
+			"title": "Bazaar",
+			"description": "Plugin marketplace"
+		},
+		"hosting": {
+			"title": "Hosting",
+			"description": "Usage and billing"
+		},
+		"labs": {
+			"title": "Labs",
+			"description": "Development kit"
+		},
+		"about-me": {
+			"watermark": "Konjure Desktop App v%s"
+		}
+	},
+	"gateway": {
+		"upload": "Upload your website",
+		"cancel": "Cancel",
+		"publish": "Publish",
+    "upload-window": {
+      "archive-file-types": "Archive File Types",
+      "all-file-types": "All File Types"
+    }
+	}
+}

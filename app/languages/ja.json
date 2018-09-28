@@ -1,0 +1,40 @@
+{
+	"navigation": {
+		"gateway": {
+			"title": "ゲートウェイ",
+			"description": "あなたのサイトをアップロードする"
+		},
+		"node": {
+			"title": "ノード",
+			"description": "ピアツーピアネットワーク"
+		},
+		"dashboard": {
+			"title": "ダッシュボード",
+			"description": "あなたのサイトを管理する"
+		},
+		"bazaar": {
+			"title": "バザール",
+			"description": "プラグインマーケットプレイス"
+		},
+		"hosting": {
+			"title": "ホスティング",
+			"description": "使い方と請求"
+		},
+		"labs": {
+			"title": "ラボ",
+			"description": "開発キット"
+		},
+		"about-me": {
+			"watermark": "コンジュアデスクトップアプリケーション v%s"
+		}
+	},
+	"gateway": {
+		"upload": "あなたのサイトをアップロードする",
+		"cancel": "キャンセル",
+		"publish": "公開する",
+    "upload-window": {
+      "archive-file-types": "アーカイブファイルの種類",
+      "all-file-types": "すべてのファイルタイプ"
+    }
+	}
+}

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Route } from 'react-router-dom'
 
+const __ = require('i18n').__;
+
 interface NavigationProps {
   tabs: Array
 }
@@ -45,7 +47,7 @@ export default class Navigation extends Component<NavigationProps> {
             })
           }
           <br/>
-          <div className="k-copyright">Konjure Desktop App v0.1.0</div>
+          <div className="k-copyright">{__('navigation.about-me.watermark', '0.1.0')}</div>
         </div>
         <div className="button k-profile material slight-rounded">
           <img src="res/image/placeholder-profile.png" className="no-select"/>
@@ -75,8 +77,8 @@ export class NavigationItem extends Component<ItemProps> {
   }
 
   render() {
-    const name = this.props.name;
-    const description = this.props.description;
+    const name = __(`navigation.${this.props.name}.title`);
+    const description = __(`navigation.${this.props.name}.description`);
     const usable = this.state.usable;
     const current = this.state.current;
     const status = this.state.status;
