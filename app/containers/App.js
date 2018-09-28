@@ -5,7 +5,7 @@ import WindowControls from "../components/WindowControls";
 import Navigation from "../components/sidebar/Navigation";
 import routes from '../constants/routes.json';
 import CounterPage from "./CounterPage";
-import HomePage from "./HomePage";
+import GatewayPage from "./GatewayPage";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class App extends React.Component {
         ]}/>
         <Switch>
           <Route path={routes.NODE} component={CounterPage}/>
-          <Route path={routes.GATEWAY} component={HomePage}/>
+          <Route path={routes.GATEWAY} component={GatewayPage}/>
         </Switch>
       </div>
     );

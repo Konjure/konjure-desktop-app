@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Counter.css';
 import routes from '../constants/routes.json';
 
 type Props = {
@@ -25,17 +24,16 @@ export default class Counter extends Component<Props> {
     } = this.props;
     return (
       <div>
-        <div className={styles.backButton} data-tid="backButton">
+        <div data-tid="backButton">
           <Link to={routes.GATEWAY}>
             <i className="fa fa-arrow-left fa-3x" />
           </Link>
         </div>
-        <div className={`counter ${styles.counter}`} data-tid="counter">
+        <div data-tid="counter">
           {counter}
         </div>
-        <div className={styles.btnGroup}>
+        <div >
           <button
-            className={styles.btn}
             onClick={increment}
             data-tclass="btn"
             type="button"
@@ -43,7 +41,6 @@ export default class Counter extends Component<Props> {
             <i className="fa fa-plus" />
           </button>
           <button
-            className={styles.btn}
             onClick={decrement}
             data-tclass="btn"
             type="button"
@@ -51,7 +48,6 @@ export default class Counter extends Component<Props> {
             <i className="fa fa-minus" />
           </button>
           <button
-            className={styles.btn}
             onClick={incrementIfOdd}
             data-tclass="btn"
             type="button"
@@ -59,7 +55,6 @@ export default class Counter extends Component<Props> {
             odd
           </button>
           <button
-            className={styles.btn}
             onClick={() => incrementAsync()}
             data-tclass="btn"
             type="button"

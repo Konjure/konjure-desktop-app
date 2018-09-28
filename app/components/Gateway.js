@@ -1,9 +1,11 @@
 // @flow
 import React, {Component} from 'react';
 
+const {ipcRenderer, ipcMain} = require('electron');
+
 type Props = {};
 
-export default class Home extends Component<Props> {
+export default class Gateway extends Component<Props> {
   props: Props;
 
   render() {

@@ -87,6 +87,8 @@ app.on('ready', async () => {
   splashWindow.loadURL(path.join(`file://${__dirname}`, 'splash', 'splash.html'));
   mainWindow.loadURL(path.join(`file://${__dirname}`, 'app.html'));
 
+  mainWindow.webContents.openDevTools();
+
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
