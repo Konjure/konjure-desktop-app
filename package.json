@@ -51,6 +51,7 @@
       "dist/",
       "res/",
       "splash/",
+      "languages/",
       "node_modules/",
       "app.html",
       "konjure-ui.min.css",
