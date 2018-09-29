@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, {render} from 'react-dom';
 
 const remote = require('electron').remote;
 const {Menu, MenuItem} = remote;
@@ -16,7 +16,7 @@ function initLanguages () {
       label: i18n.__({phrase: 'language', locale: loc}),
       click () {
         configurei18n(loc);
-        ReactDOM.render(document.getElementById('root'));
+        require('../../index').render();
       }
     })
   });
