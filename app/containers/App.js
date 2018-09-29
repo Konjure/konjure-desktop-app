@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import {Route, Switch} from 'react-router';
-import WindowControls from "../components/WindowControls";
-import Navigation from "../components/sidebar/Navigation";
+import WindowControls from "../components/static/WindowControls";
+import Navigation from "../components/static/sidebar/Navigation";
 import routes from '../constants/routes.json';
 import CounterPage from "./CounterPage";
 import GatewayPage from "./GatewayPage";

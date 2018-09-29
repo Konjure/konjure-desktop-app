@@ -106,10 +106,6 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  i18n.configure({
-    directory: path.join(__dirname, 'languages')
-  });
-
   buildWindows();
 
   const menuBuilder = new MenuBuilder(mainWindow);

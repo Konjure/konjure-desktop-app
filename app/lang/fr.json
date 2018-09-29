@@ -1,0 +1,41 @@
+{
+  "language": "français",
+  "navigation": {
+    "gateway": {
+      "title": "Passerelle",
+      "description": "Téléchargez votre site"
+    },
+    "node": {
+      "title": "Nœud",
+      "description": "Réseau de pairs"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Gérez votre site"
+    },
+    "bazaar": {
+      "title": "Bazar",
+      "description": "Place de marché du plugin"
+    },
+    "hosting": {
+      "title": "Hébergement",
+      "description": "Utilisation et facturation"
+    },
+    "labs": {
+      "title": "Labs",
+      "description": "Kit de développement"
+    },
+    "about-me": {
+      "watermark": "Application de bureau Konjure v%s"
+    }
+  },
+  "gateway": {
+    "upload": "Téléchargez votre site",
+    "cancel": "Annuler",
+    "publish": "Publier",
+    "upload-window": {
+      "archive-file-types": "Types de fichiers d'archive",
+      "all-file-types": "Tous les types de fichiers"
+    }
+  }
+}

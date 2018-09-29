@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "electron-react-boilerplate",
+  "name": "konjure-desktop-app",
+  "productName": "konjure-desktop-app",
   "version": "1.0.0",
   "description": "Konjures primary desktop application, used to build and upload your website to the decentralized web!",
   "main": "./main.prod.js",

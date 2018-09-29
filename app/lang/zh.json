@@ -1,0 +1,41 @@
+{
+  "language": "中文",
+  "navigation": {
+    "gateway": {
+      "title": "网关",
+      "description": "上传您的网站"
+    },
+    "node": {
+      "title": "节点",
+      "description": "点对点网络"
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "description": "管理您的网站"
+    },
+    "bazaar": {
+      "title": "市场",
+      "description": "插件市场"
+    },
+    "hosting": {
+      "title": "主机",
+      "description": "使用和计费"
+    },
+    "labs": {
+      "title": "实验室",
+      "description": "开发套件"
+    },
+    "about-me": {
+      "watermark": "Konjure桌面应用程序v%s"
+    }
+  },
+  "gateway": {
+    "upload": "上传您的网站",
+    "cancel": "取消",
+    "publish": "发布",
+    "upload-window": {
+      "archive-file-types": "存档文件类型",
+      "all-file-types": "所有文件类型"
+    }
+  }
+}

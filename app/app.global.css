@@ -6,6 +6,14 @@ body {
   letter-spacing: 0.25px;
 }
 
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
 .button:hover {
   cursor: auto;
 }
@@ -19,9 +27,25 @@ body {
   -webkit-app-region: drag;
 }
 
+.k-toolbar-left {
+  float: left;
+  height: 100%;
+  width: 60px;
+  z-index: 10;
+  -webkit-app-region: no-drag;
+}
+
+.k-toolbar-left:hover img {
+  opacity: 0.8;
+  filter:alpha(opacity=50);
+}
+
+.k-toolbar-left:hover {
+  background-color: #222;
+}
+
 .k-toolbar img {
   height: 16px;
-  float: left;
   margin-top: 5px;
   margin-left: 5px;
 }
@@ -48,7 +72,7 @@ body {
   cursor: pointer;
 }
 
-.k-toolbar-button:hover img {
+.k-toolbar-button img {
   opacity: 0.8;
 }
 

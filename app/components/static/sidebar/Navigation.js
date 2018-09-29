@@ -88,9 +88,10 @@ export class NavigationItem extends Component<ItemProps> {
         <div className={
           `button k-option material ${usable ? 'active' : 'inactive'} no-select ${current ? 'current' : ''}`
         } onClick={() => {
-          if (!this.state.usable) {
+          if (!this.state.usable || currentlyOpen === this) {
             return;
           }
+
           this.props.onclick(this);
           history.push(this.props.map)
         }}>{name}<br/><span>{description}</span>
