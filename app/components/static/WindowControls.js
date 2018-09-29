@@ -1,27 +1,30 @@
 import React, { Component } from 'react';
+import ReactDOM, {render} from 'react-dom';
 
 const remote = require('electron').remote;
 const {Menu, MenuItem} = remote;
 
 const i18n = require('i18n');
+const {configurei18n} = require('../../lang/locale');
 
 const popupMenu = new Menu();
 const languages = [];
 
-i18n.getLocales().map(loc => {
-  languages.push({
-    label: i18n.__({phrase: 'language', locale: loc}),
-    click () {
-      i18n.configure({
-        defaultLocale: loc
-      });
-    }
-  })
-});
+function initLanguages () {
+  i18n.getLocales().map(loc => {
+    languages.push({
+      label: i18n.__({phrase: 'language', locale: loc}),
+      click () {
+        configurei18n(loc);
+        require('../../index').render();
+      }
+    })
+  });
 
-popupMenu.append(new MenuItem({
-  label: 'Language', submenu: languages
-}));
+  popupMenu.append(new MenuItem({
+    label: 'Language', submenu: languages
+  }));
+}
 
 type Props = {};
 
@@ -30,6 +33,7 @@ export default class WindowControls extends Component<Props> {
     super(props);
     this.window = remote.getCurrentWindow();
 
+    initLanguages();
     this.doWindowMaximize = this.doWindowMaximize.bind(this);
     this.doMenu = this.doMenu.bind(this);
   }
