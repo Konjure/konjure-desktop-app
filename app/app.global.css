@@ -116,7 +116,7 @@ img {
 
 .k-gateway-frame {
   height: calc(100% - 91px);
-  width: 100%;
+  width: calc(100% - 202px);
   position: fixed;
   overflow: hidden;
 }
@@ -130,7 +130,7 @@ img {
 
 .k-gateway-toolbar {
   height: 65px;
-  width: 100%;
+  width: calc(100% - 202px);
   position: absolute;
   background-color: #2a2a2a;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
@@ -257,7 +257,7 @@ img {
   width: 180px;
   background-color: #333;
   position: absolute;
-  bottom: 37.5px;
+  bottom: 38px;
   left: 10px;
   padding: 0;
 }
