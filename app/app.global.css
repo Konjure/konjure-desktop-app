@@ -4,6 +4,12 @@ body {
   background-color: #222;
   font-family: Open Sans;
   letter-spacing: 0.25px;
+  overflow: hidden;
+}
+
+#root, #root > div {
+	height: 100%;
+	width: 100%;
 }
 
 img {
@@ -103,12 +109,13 @@ img {
 
 .k-content {
   height: 100%;
-  width: 100%;
+  width: calc(100% - 202px);
   display: inline;
+  float: right;
 }
 
 .k-gateway-frame {
-  height: calc(100% - 65px);
+  height: calc(100% - 91px);
   width: 100%;
   position: fixed;
   overflow: hidden;
@@ -250,7 +257,7 @@ img {
   width: 180px;
   background-color: #333;
   position: absolute;
-  bottom: 12.5px;
+  bottom: 37.5px;
   left: 10px;
   padding: 0;
 }
