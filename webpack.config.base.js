@@ -28,11 +28,9 @@ function filterDepWithoutEntryPoints(dep: string): boolean {
   }
 }
 
-export default {
-  externals: [
-    ...Object.keys(externals || {}),
-    ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
-  ],
+const settings = {
+  // Inject externals later as commonjs
+  externals: {},
 
   module: {
     rules: [
@@ -71,3 +69,12 @@ export default {
     new webpack.NamedModulesPlugin()
   ]
 };
+
+[
+  ...Object.keys(externals || {}),
+  ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
+].forEach(extern => {
+  settings.externals[extern] = `commonjs ${extern}`;
+});
+
+export default settings;
