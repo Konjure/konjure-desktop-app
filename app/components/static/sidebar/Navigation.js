@@ -11,7 +11,6 @@ type ItemProps = {
   current?: boolean,
   usable?: boolean,
   name: string,
-  description: string,
   onclick: (1) => void
 }
 
@@ -41,10 +40,7 @@ export default class Navigation extends Component<NavigationProps> {
       <div className="k-nav">
         <div className="k-menu">
           {
-            this.props.tabs.map((obj) => {
-              const navItem = <NavigationItem {...obj} onclick={(sub) => this.handleClick(sub)}/>;
-              return navItem;
-            })
+            this.props.tabs.map((obj) => <NavigationItem {...obj} key={`${obj.name}`} onclick={(sub) => this.handleClick(sub)}/>)
           }
           <br/>
           <div className="k-copyright">{__('navigation.about-me.watermark', '0.1.0')}</div>

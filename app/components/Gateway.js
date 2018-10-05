@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 
-const {ipcRenderer, ipcMain, remote} = require('electron');
+const {remote} = require('electron');
 const dialog = remote.dialog;
 const fs = require('fs');
 const os = require('os');
@@ -20,12 +20,12 @@ export default class Gateway extends Component<Props> {
       preppedForUpload: null
     };
 
-    this.handleUpload = this.handleUpload.bind(this);
+    this.prepareUpload = this.prepareUpload.bind(this);
     this.publishPayload = this.publishPayload.bind(this);
     this.cancelPayload = this.cancelPayload.bind(this);
   }
 
-  handleUpload(...files) {
+  prepareUpload(...files) {
     if (files[0] === undefined) {
       return;
     }
@@ -40,7 +40,8 @@ export default class Gateway extends Component<Props> {
       return;
     }
 
-    console.log(`Would publish ${this.state.preppedForUpload}`);
+    global.ipfsController.saveToIPFS(fs.readFileSync(`${this.state.preppedForUpload[0]}`));
+    this.cancelPayload();
   }
 
   cancelPayload() {
@@ -59,7 +60,7 @@ export default class Gateway extends Component<Props> {
           files.push(f.path);
         }
 
-        this.handleUpload(files);
+        this.prepareUpload(files);
         return false;
       }}>
         <div className="k-gateway-frame">
@@ -80,7 +81,7 @@ export default class Gateway extends Component<Props> {
                 {name: __('gateway.upload-window.all-file-types'), extensions: ['*']}
               ]
             }, (fileNames) => {
-              this.handleUpload(fileNames);
+              this.prepareUpload(fileNames);
             });
           }}>
             <div>{__('gateway.upload')}</div>

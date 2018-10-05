@@ -6,6 +6,22 @@ import Navigation from "../components/static/sidebar/Navigation";
 import routes from '../constants/routes.json';
 import CounterPage from "./CounterPage";
 import GatewayPage from "./GatewayPage";
+import IPFSController from "../ipfs/IPFSController";
+import IPFSDaemon from "../ipfs/IPFSDaemon";
+
+const ipcRenderer = require('electron').ipcRenderer;
+const daemon = new IPFSDaemon();
+global.ipfsController = new IPFSController();
+
+daemon.start((err, instance) => {
+  if (err) {
+    throw err;
+  }
+
+  ipcRenderer.send('ipfs-finish-init');
+  console.log(`Binding daemon process API to controller API`);
+  global.ipfsController.bindAPI(instance);
+});
 
 export default class App extends React.Component {
   constructor(props) {

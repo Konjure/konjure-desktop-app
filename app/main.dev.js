@@ -10,11 +10,10 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import {app, BrowserWindow, ipcMain} from 'electron';
 import MenuBuilder from './menu';
 
 const path = require('path');
-const i18n = require('i18n');
 
 let mainWindow = null;
 let splashWindow = null;
@@ -55,7 +54,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-function buildWindows () {
+function buildWindows() {
   splashWindow = new BrowserWindow({
     width: 340,
     height: 510,
@@ -64,7 +63,8 @@ function buildWindows () {
     alwaysOnTop: true,
     movable: false,
     center: true,
-    skipTaskbar: true
+    skipTaskbar: true,
+    resizable: false
   });
 
   mainWindow = new BrowserWindow({
@@ -82,15 +82,20 @@ function buildWindows () {
   mainWindow.loadURL(path.join(`file://${__dirname}`, 'app.html'));
 
   mainWindow.webContents.on('did-finish-load', () => {
-    setTimeout(function () {
-      if (!mainWindow) {
-        throw new Error('"mainWindow" is not defined');
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined');
+    }
+
+    mainWindow.webContents.openDevTools();
+
+    ipcMain.on('ipfs-finish-init', event => {
+      if (splashWindow.isDestroyed()) {
+        return;
       }
 
       splashWindow.destroy();
       mainWindow.show();
-      mainWindow.focus();
-    }, 1000);
+    });
   });
 
   mainWindow.on('closed', () => {

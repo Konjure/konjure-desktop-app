@@ -16,11 +16,21 @@ exports.render = function () {
   );
 };
 
-exports.render();
+render(
+  <AppContainer>
+    <Root store={store} history={history} />
+  </AppContainer>,
+  document.getElementById('root')
+);
 
 if (module.hot) {
   module.hot.accept('./containers/Root', () => {
     const NextRoot = require('./containers/Root'); // eslint-disable-line global-require
-    exports.render();
+    render(
+      <AppContainer>
+        <NextRoot store={store} history={history} />
+      </AppContainer>,
+      document.getElementById('root')
+    );
   });
 }
