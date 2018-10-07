@@ -61,39 +61,33 @@ export default class Node extends Component {
           </div>
         </div>
         <div className='k-node-left'>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <h4>CPU & GPU</h4>
-                <h6>Select how much available CPU you would like Konjure to use:</h6>
-                <br /><br />
-                  <div className='slider cpu' />
+          {
+            [
+              {
+                title: 'CPU',
+                desc: <h6>Select how much available CPU you would like Konjure to use</h6>,
+              },
+              {
+                title: 'Memory',
+                desc: <h6>Select how much RAM Konjure can use (<span>{Node.formatOsMem(os.totalmem())}</span> total)</h6>,
+              },
+              {
+                title: 'Network',
+                desc: <h6>Select how much of your network you would like Konjure to use</h6>,
+              }
+            ].map((slider) =>
+              <div key={slider.title} className='k-slider'>
+                <div className='vertical-center-outer'>
+                  <div className='vertical-center-inner'>
+                    <h4>{slider.title.toUpperCase()}</h4>
+                    {slider.desc}
+                    <br /><br />
+                    <div className={`slider ${slider.title.toLowerCase()}`} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <h4>MEMORY</h4>
-                <h6>
-                  Select how much RAM Konjure can use (<span>{Node.formatOsMem(os.totalmem())}</span> total)
-                </h6>
-                <br />
-                <br />
-                <div className='slider ram' />
-              </div>
-            </div>
-          </div>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <h4>NETWORK</h4>
-                <h6>Select how much of your network you would like Konjure to use:</h6>
-                <br /><br />
-                  <div className='slider network' />
-              </div>
-            </div>
-          </div>
+            )
+          }
         </div>
         <div className='k-node-right'>
           <div className='k-slider'>
