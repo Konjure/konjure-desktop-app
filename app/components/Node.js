@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import Slider from '@material-ui/lab/Slider';
 
 const os = require('os');
 
@@ -16,12 +17,16 @@ export default class Node extends Component {
     }
 
     const exp = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${Math.round(bytes / (1024**exp), 2)} ${sizes[exp]}`
+    return `${Math.round(bytes / (1024 ** exp), 2)} ${sizes[exp]}`;
   }
 
   constructor(props) {
     super(props);
     this.toggleNode = this.toggleNode.bind(this);
+
+    this.state = {
+      slider: 0
+    };
   }
 
   toggleNode() {
@@ -51,10 +56,12 @@ export default class Node extends Component {
             <div className='vertical-center-inner'>
               <h1 className='left'>Konjure Node</h1>
               <label htmlFor='nodeOnOff' className='switch'>
-                <input type='checkbox' />
+                <input type='checkbox'/>
                 <span
                   className={`node-slider round ${exports.nodeStatus ? 'color' : ''}`}
-                  onClick={() => {this.toggleNode()}}/>
+                  onClick={() => {
+                    this.toggleNode();
+                  }}/>
               </label>
               <h4 className='node-status left'>{exports.nodeStatus ? 'ON' : 'OFF'}</h4>
             </div>
@@ -66,14 +73,15 @@ export default class Node extends Component {
               {
                 title: 'CPU',
                 desc: <h6>Select how much available CPU you would like Konjure to use</h6>,
+                min: 0,
+                max: 100
               },
               {
                 title: 'Memory',
-                desc: <h6>Select how much RAM Konjure can use (<span>{Node.formatOsMem(os.totalmem())}</span> total)</h6>,
-              },
-              {
-                title: 'Network',
-                desc: <h6>Select how much of your network you would like Konjure to use</h6>,
+                desc: <h6>Select how much RAM Konjure can use (<span>{Node.formatOsMem(os.totalmem())}</span> total)
+                </h6>,
+                min: 0,
+                max: 16
               }
             ].map((slider) =>
               <div key={slider.title} className='k-slider'>
@@ -81,8 +89,19 @@ export default class Node extends Component {
                   <div className='vertical-center-inner'>
                     <h4>{slider.title.toUpperCase()}</h4>
                     {slider.desc}
-                    <br /><br />
-                    <div className={`slider ${slider.title.toLowerCase()}`} />
+                    <br/><br/>
+                    <Slider
+                      // eslint-disable-next-line react/destructuring-assignment
+                      value={this.state[slider.title] || 0}
+                      disabled={exports.nodeStatus}
+                      min={slider.min}
+                      max={slider.max}
+                      className={`slider ${slider.title.toLowerCase()}`}
+                      onChange={(evt, value) => {
+                        const state = {};
+                        state[slider.title] = value;
+                        this.setState(state);
+                      }}/>
                   </div>
                 </div>
               </div>
@@ -93,21 +112,21 @@ export default class Node extends Component {
           <div className='k-slider'>
             <div className='vertical-center-outer'>
               <div className='vertical-center-inner'>
-                <input className='display-amount' id='cpu-amount' readOnly />
+                <input className='display-amount' id='cpu-amount' readOnly/>
               </div>
             </div>
           </div>
           <div className='k-slider'>
             <div className='vertical-center-outer'>
               <div className='vertical-center-inner'>
-                <input className='display-amount' id='ram-amount' readOnly />
+                <input className='display-amount' id='ram-amount' readOnly/>
               </div>
             </div>
           </div>
           <div className='k-slider'>
             <div className='vertical-center-outer'>
               <div className='vertical-center-inner'>
-                <input className='display-amount' id='network-amount' readOnly />
+                <input className='display-amount' id='network-amount' readOnly/>
               </div>
             </div>
           </div>
