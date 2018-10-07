@@ -1,21 +1,27 @@
+/* eslint-disable no-underscore-dangle */
 import React, {Component} from 'react';
 
-const remote = require('electron').remote;
+const { remote } = require('electron');
+
 const {Menu, MenuItem} = remote;
 
 const i18n = require('i18n');
-const {configurei18n} = require('../../lang/locale');
+
+const { render } = require('../../index');
+
+const { configurei18n } = require('../../lang/locale');
 
 const popupMenu = new Menu();
 const languages = [];
 
 function initLanguages () {
-  i18n.getLocales().map(loc => {
+  i18n.getLocales().forEach(loc => {
     languages.push({
       label: i18n.__({phrase: 'language', locale: loc}),
       click () {
         configurei18n(loc);
-        require('../../index').render();
+        // eslint-disable-next-line global-require
+        render(require('../../containers/Root'))
       }
     })
   });
@@ -28,13 +34,20 @@ function initLanguages () {
 type Props = {};
 
 export default class WindowControls extends Component<Props> {
+  static doMenu () {
+    popupMenu.popup({
+      window: remote.getCurrentWindow(),
+      x: 15,
+      y: 15
+    });
+  }
+
   constructor(props) {
     super(props);
     this.window = remote.getCurrentWindow();
 
     initLanguages();
     this.doWindowMaximize = this.doWindowMaximize.bind(this);
-    this.doMenu = this.doMenu.bind(this);
   }
 
   doWindowMaximize () {
@@ -45,29 +58,21 @@ export default class WindowControls extends Component<Props> {
     }
   }
 
-  doMenu () {
-    popupMenu.popup({
-      window: remote.getCurrentWindow(),
-      x: 15,
-      y: 15
-    });
-  }
-
   render() {
     return (
-      <div className="k-toolbar">
-        <div className="k-toolbar-left" onClick={this.doMenu}>
-          <img src="res/image/konjure.png"/>
+      <div className='k-toolbar'>
+        <div className='k-toolbar-left' onClick={WindowControls.doMenu}>
+          <img src='res/image/konjure.png' alt=''/>
         </div>
-        <div className="k-toolbar-right">
-          <div className="k-toolbar-button" id="min" onClick={() => this.window.minimize()}>
-            <img src="res/image/window/minimize.png"/>
+        <div className='k-toolbar-right'>
+          <div className='k-toolbar-button' id='min' onClick={() => this.window.minimize()}>
+            <img src='res/image/window/minimize.png' alt='minimize'/>
           </div>
-          <div className="k-toolbar-button" id="max" onClick={() => this.doWindowMaximize()}>
-            <img src="res/image/window/maximize.png"/>
+          <div className='k-toolbar-button' id='max' onClick={() => this.doWindowMaximize()}>
+            <img src='res/image/window/maximize.png' alt='maximize'/>
           </div>
-          <div className="k-toolbar-button" id="close" onClick={() => this.window.close()} >
-            <img src="res/image/window/close.png"/>
+          <div className='k-toolbar-button' id='close' onClick={() => this.window.close()} >
+            <img src='res/image/window/close.png' alt='close'/>
           </div>
         </div>
       </div>

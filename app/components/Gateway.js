@@ -1,13 +1,15 @@
+/* eslint-disable no-underscore-dangle */
 // @flow
 import React, {Component} from 'react';
 
 const {remote} = require('electron');
-const dialog = remote.dialog;
+
+const { dialog } = remote;
+
 const fs = require('fs');
 const os = require('os');
-const path = require('path');
 
-const __ = require('i18n').__;
+const { __ } = require('i18n');
 
 const mainWindow = remote.getCurrentWindow();
 
@@ -36,11 +38,14 @@ export default class Gateway extends Component<Props> {
   }
 
   publishPayload() {
-    if (this.state.preppedForUpload == null) {
+    const {
+      preppedForUpload
+    } = this.state;
+    if (preppedForUpload == null) {
       return;
     }
 
-    global.ipfsController.saveToIPFS(fs.readFileSync(`${this.state.preppedForUpload[0]}`));
+    global.ipfsController.saveToIPFS(fs.readFileSync(`${preppedForUpload[0]}`));
     this.cancelPayload();
   }
 
@@ -51,12 +56,16 @@ export default class Gateway extends Component<Props> {
   }
 
   render() {
+    const {
+      preppedForUpload
+    } = this.state;
     return (
       <div className="k-content gateway" onDrop={event => {
         event.preventDefault();
 
-        let files = [];
-        for (let f of event.dataTransfer.files) {
+        const files = [];
+        for (let i = 0; i < event.dataTransfer.files.length; ++i) {
+          const f = event.dataTransfer.files[i];
           files.push(f.path);
         }
 
@@ -64,11 +73,11 @@ export default class Gateway extends Component<Props> {
         return false;
       }}>
         <div className="k-gateway-frame">
-          <div className="k-website"></div>
-          <img src="res/image/ghost.svg" className="no-select"/>
+          <div className="k-website" />
+          <img src="res/image/ghost.svg" className="no-select" alt=''/>
         </div>
         <div className="k-gateway-toolbar">
-          <button className="button k-gateway-button slight-rounded material no-select upload-button left"
+          <button type='button' className="button k-gateway-button slight-rounded material no-select upload-button left"
           onClick={() => {
             dialog.showOpenDialog(mainWindow, {
               properties: [
@@ -88,14 +97,14 @@ export default class Gateway extends Component<Props> {
           </button>
           <div className={`button k-gateway-button material slight-rounded
           no-select publish-button right ${
-            (this.state.preppedForUpload != null && this.state.preppedForUpload.length > 0 ? '' : 'disabled')
+            (preppedForUpload != null && preppedForUpload.length > 0 ? '' : 'disabled')
           }`}
           onClick={this.publishPayload}>
             {__('gateway.publish')}
           </div>
           <div className={`button k-gateway-button material slight-rounded no-select
           cancel-button right ${
-            (this.state.preppedForUpload != null && this.state.preppedForUpload.length > 0 ? '' : 'disabled')
+            (preppedForUpload != null && preppedForUpload.length > 0 ? '' : 'disabled')
           }`}
           onClick={this.cancelPayload}>
             {__('gateway.cancel')}

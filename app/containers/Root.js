@@ -1,9 +1,11 @@
 // @flow
-import App from './App';
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import {ConnectedRouter} from 'react-router-redux';
+import App from './App';
 import type {Store} from '../reducers/types';
+
+const { configurei18n } = require('../lang/locale');
 
 type Props = {
   store: Store,
@@ -13,7 +15,7 @@ type Props = {
 export default class Root extends Component<Props> {
   constructor(props) {
     super(props);
-    require('../lang/locale').configurei18n();
+    configurei18n();
   }
 
   render() {

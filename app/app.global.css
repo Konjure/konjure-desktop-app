@@ -2,14 +2,15 @@
 
 body {
   background-color: #222;
-  font-family: Open Sans;
+  font-family: Open Sans, sans-serif;
   letter-spacing: 0.25px;
   overflow: hidden;
 }
 
-#root, #root > div {
-	height: 100%;
-	width: 100%;
+#root,
+#root > div {
+  height: 100%;
+  width: 100%;
 }
 
 img {
@@ -17,7 +18,6 @@ img {
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
 }
 
 .button:hover {
@@ -41,24 +41,22 @@ img {
   -webkit-app-region: no-drag;
 }
 
-.k-toolbar-left:hover img {
-  opacity: 0.8;
-  filter:alpha(opacity=50);
-}
-
-.k-toolbar-left:hover {
-  background-color: #222;
-}
-
 .k-toolbar img {
   height: 16px;
   margin-top: 5px;
   margin-left: 5px;
 }
 
-.k-toolbar-right {
-  height: 100%;
-  float: right;
+.k-toolbar-button img {
+  margin-left: 5px;
+  opacity: 0.5;
+}
+
+.k-gateway-frame > img {
+  position: absolute;
+  bottom: -250px;
+  right: -105px;
+  transform: rotate(-5deg);
 }
 
 .k-toolbar-button {
@@ -68,18 +66,9 @@ img {
   -webkit-app-region: no-drag;
 }
 
-.k-toolbar-button img {
-  margin-left: 5px;
-  opacity: 0.5;
-}
-
-.k-toolbar-button:hover {
-  background-color: #333;
-  cursor: pointer;
-}
-
-.k-toolbar-button img {
-  opacity: 0.8;
+.k-toolbar-right {
+  height: 100%;
+  float: right;
 }
 
 #close:hover {
@@ -97,7 +86,7 @@ img {
   position: relative;
   float: left;
   overflow: hidden;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
 }
 
 .k-sandbox {
@@ -121,22 +110,15 @@ img {
   overflow: hidden;
 }
 
-.k-gateway-frame > img {
-  position: absolute;
-  bottom: -250px;
-  right: -105px;
-  transform: rotate(-5deg);
-}
-
 .k-gateway-toolbar {
   height: 65px;
   width: calc(100% - 202px);
   position: absolute;
   background-color: #2a2a2a;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
-  padding: 12.5px 12.5px 0px 12.5px;
-  bottom: 0px;
+  padding: 12.5px 12.5px 0 12.5px;
+  bottom: 0;
 }
 
 .k-gateway-toolbar-after {
@@ -237,7 +219,7 @@ img {
   top: 25px;
   right: 10px;
   border-radius: 50%;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
 }
 
 .k-status.up {
@@ -250,6 +232,10 @@ img {
 
 .k-status.down {
   background-color: #e03a3a;
+}
+
+.k-status.unavailable {
+  background-color: #222;
 }
 
 .k-profile {
@@ -365,9 +351,9 @@ img {
   background: #7ec31e;
   border-radius: 50%;
   border: none;
-  -webkit-box-shadow: 0px 0px 0px 2px rgba(34, 34, 34, 1);
-  -moz-box-shadow: 0px 0px 0px 2px rgba(34, 34, 34, 1);
-  box-shadow: 0px 0px 0px 2px rgba(34, 34, 34, 1);
+  -webkit-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
+  -moz-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
   cursor: pointer;
 }
 
@@ -413,7 +399,7 @@ img {
   position: relative;
   display: inline-block;
   float: left;
-  margin: 8px 10px 0px 25px;
+  margin: 8px 10px 0 25px;
 }
 
 .node-status {
@@ -435,7 +421,7 @@ img {
   transition: 0.25s;
 }
 
-.node-slider:before {
+.node-slider::before {
   position: absolute;
   content: '';
   height: 20px;
@@ -454,7 +440,7 @@ input:focus + .node-slider {
   box-shadow: 0 0 1px #2196f3;
 }
 
-input:checked + .node-slider:before {
+input:checked + .node-slider::before {
   transform: translateX(26px);
 }
 
@@ -462,6 +448,20 @@ input:checked + .node-slider:before {
   border-radius: 34px;
 }
 
-.node-slider.round:before {
+.node-slider.round::before {
   border-radius: 50%;
+}
+
+.k-toolbar-left:hover img {
+  opacity: 0.8;
+  filter: alpha(opacity=50);
+}
+
+.k-toolbar-left:hover {
+  background-color: #222;
+}
+
+.k-toolbar-button:hover {
+  background-color: #333;
+  cursor: pointer;
 }

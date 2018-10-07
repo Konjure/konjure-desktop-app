@@ -55,7 +55,7 @@ describe('main window', function spec() {
     // expect(logs).toHaveLength(0);
   });
 
-  it('should to Counter with click "to Counter" link', async () => {
+  it('should to Node with click "to Node" link', async () => {
     const { client } = this.app;
 
     await client.click('[data-tid=container] > a');

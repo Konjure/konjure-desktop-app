@@ -7,30 +7,18 @@ import './app.global.css';
 
 const store = configureStore();
 
-exports.render = function () {
+exports.render = function (Component) {
   render(
     <AppContainer>
-      <Root store={store} history={history}/>
+      <Component store={store} history={history}/>
     </AppContainer>,
     document.getElementById('root')
   );
 };
 
-render(
-  <AppContainer>
-    <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
-);
+exports.render(Root);
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
-    const NextRoot = require('./containers/Root'); // eslint-disable-line global-require
-    render(
-      <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    );
-  });
+  // eslint-disable-next-line global-require
+  module.hot.accept('./containers/Root', () => exports.render(require('./containers/Root')));
 }

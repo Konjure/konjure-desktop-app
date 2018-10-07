@@ -1,7 +1,10 @@
-import React, {Component} from 'react';
-import { Route } from 'react-router-dom'
+/* eslint-disable react/no-multi-comp,no-underscore-dangle */
+import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 
-const __ = require('i18n').__;
+const { __ } = require('i18n');
+
+const { version } = require('../../../../package');
 
 interface NavigationProps {
   tabs: Array
@@ -12,21 +15,21 @@ type ItemProps = {
   usable?: boolean,
   name: string,
   onclick: (1) => void
-}
+};
 
-let currentlyOpen = undefined;
+let currentlyOpen;
+
+exports.navitems = {};
+exports.lookupNavItem = function(name) {
+  return exports.navitems[name.toLowerCase()];
+};
 
 export default class Navigation extends Component<NavigationProps> {
-  constructor(props) {
-    super(props);
-    this.active = undefined;
-  }
-
-  handleClick(obj) {
+  static handleClick(obj) {
     if (currentlyOpen !== undefined) {
       currentlyOpen.setState({
         current: false
-      })
+      });
     }
 
     currentlyOpen = obj;
@@ -35,19 +38,29 @@ export default class Navigation extends Component<NavigationProps> {
     });
   }
 
+  constructor(props) {
+    super(props);
+    this.active = undefined;
+  }
+
   render() {
+    const {
+      tabs
+    } = this.props;
+
     return (
-      <div className="k-nav">
-        <div className="k-menu">
+      <div className='k-nav'>
+        <div className='k-menu'>
           {
-            this.props.tabs.map((obj) => <NavigationItem {...obj} key={`${obj.name}`} onclick={(sub) => this.handleClick(sub)}/>)
+            tabs.map((obj) => <NavigationItem {...obj} key={`${obj.name}`}
+                                              onclick={(sub) => Navigation.handleClick(sub)}/>)
           }
           <br/>
-          <div className="k-copyright">{__('navigation.about-me.watermark', '0.1.0')}</div>
+          <div className='k-copyright'>{__('navigation.about-me.watermark', `${version}`)}</div>
         </div>
-        <div className="button k-profile material slight-rounded">
-          <img src="res/image/placeholder-profile.png" className="no-select"/>
-          <h5><img src="res/image/currency.png" className="no-select"/> 0</h5>
+        <div className='button k-profile material slight-rounded'>
+          <img src='res/image/placeholder-profile.png' className='no-select' alt='profile-pic'/>
+          <h5><img src='res/image/currency.png' className='no-select' alt=''/> 0</h5>
         </div>
       </div>
     );
@@ -58,43 +71,60 @@ export class NavigationItem extends Component<ItemProps> {
   constructor(props) {
     super(props);
 
-    const current = this.props.current || false;
-    const usable = this.props.usable && true;
+    const {
+      current,
+      usable,
+      name
+    } = this.props;
 
     this.state = {
-      current: current,
-      usable: usable,
-      status: (usable ? 'waiting' : 'down')
+      current,
+      usable,
+      status: (usable ? 'waiting' : 'unavailable')
     };
 
     if (current) {
       currentlyOpen = this;
     }
+
+    exports.navitems[name.toLowerCase()] = this;
   }
 
   render() {
-    const name = __(`navigation.${this.props.name}.title`);
-    const description = __(`navigation.${this.props.name}.description`);
-    const usable = this.state.usable;
-    const current = this.state.current;
-    const status = this.state.status;
+    const {
+      name,
+      onclick
+    } = this.props;
+
+    const {
+      usable,
+      current,
+      status
+    } = this.state;
+
+    const i18nname = __(`navigation.${name}.title`);
+    const description = __(`navigation.${name}.description`);
 
     return (
-      <Route render={({history}) => (
+      <Route render={({ history }) => (
         <div className={
           `button k-option material ${usable ? 'active' : 'inactive'} no-select ${current ? 'current' : ''}`
         } onClick={() => {
-          if (!this.state.usable || currentlyOpen === this) {
+          if (!usable || currentlyOpen === this) {
             return;
           }
 
-          this.props.onclick(this);
-          history.push(this.props.map)
-        }}>{name}<br/><span>{description}</span>
-        <div className={`k-status ${status}`}></div>
+          onclick(this);
+          history.push(name);
+        }}>{i18nname}<br/><span>{description}</span>
+          <div className={`k-status ${status}`}/>
         </div>
-      )} />
+      )}/>
     );
   }
 }
 
+NavigationItem.defaultProps = {
+  current: false,
+  usable: false
+};

@@ -70,11 +70,18 @@ const settings = {
   ]
 };
 
-[
+const ext = [
   ...Object.keys(externals || {}),
   ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
-].forEach(extern => {
-  settings.externals[extern] = `commonjs ${extern}`;
-});
+];
+
+if (process.env.NODE_ENV === 'production') {
+  ext.forEach(extern => {
+    settings.externals[extern] = `commonjs ${extern}`;
+  });
+} else {
+  settings.externals = ext;
+}
+
 
 export default settings;

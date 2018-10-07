@@ -4,7 +4,7 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { BrowserRouter as Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import Counter from '../../app/components/Counter';
+import Node from '../../app/components/Node';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -15,7 +15,7 @@ function setup() {
     incrementAsync: spy(),
     decrement: spy()
   };
-  const component = shallow(<Counter counter={1} {...actions} />);
+  const component = shallow(<Node counter={1} {...actions} />);
   return {
     component,
     actions,
@@ -24,7 +24,7 @@ function setup() {
   };
 }
 
-describe('Counter component', () => {
+describe('Node component', () => {
   it('should should display count', () => {
     const { p } = setup();
     expect(p.text()).toMatch(/^1$/);
@@ -41,7 +41,7 @@ describe('Counter component', () => {
     const counter = (
       <div>
         <Router>
-          <Counter counter={1} {...actions} />
+          <Node counter={1} {...actions} />
         </Router>
       </div>
     );

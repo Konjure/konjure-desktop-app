@@ -88,7 +88,7 @@ function buildWindows() {
 
     mainWindow.webContents.openDevTools();
 
-    ipcMain.on('ipfs-finish-init', event => {
+    ipcMain.on('ipfs-finish-init', () => {
       if (splashWindow.isDestroyed()) {
         return;
       }

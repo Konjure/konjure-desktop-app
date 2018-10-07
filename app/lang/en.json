@@ -1,5 +1,5 @@
 {
-  "language": "English",
+	"language": "English",
 	"navigation": {
 		"gateway": {
 			"title": "Gateway",
@@ -27,15 +27,19 @@
 		},
 		"about-me": {
 			"watermark": "Konjure Desktop App v%s"
+		},
+		"undefined": {
+			"title": "navigation.undefined.title",
+			"description": "navigation.undefined.description"
 		}
 	},
 	"gateway": {
 		"upload": "Upload your website",
 		"cancel": "Cancel",
 		"publish": "Publish",
-    "upload-window": {
-      "archive-file-types": "Archive File Types",
-      "all-file-types": "All File Types"
-    }
+		"upload-window": {
+			"archive-file-types": "Archive File Types",
+			"all-file-types": "All File Types"
+		}
 	}
 }
