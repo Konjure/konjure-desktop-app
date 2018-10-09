@@ -7,8 +7,6 @@ const {Menu, MenuItem} = remote;
 
 const i18n = require('i18n');
 
-const { render } = require('../../index');
-
 const { configurei18n } = require('../../lang/locale');
 
 const popupMenu = new Menu();
@@ -21,7 +19,7 @@ function initLanguages () {
       click () {
         configurei18n(loc);
         // eslint-disable-next-line global-require
-        render(require('../../containers/Root'))
+        require('../../index').render(require('../../containers/Root'))
       }
     })
   });

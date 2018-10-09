@@ -1,4 +1,4 @@
-/* eslint-disable react/no-multi-comp,no-underscore-dangle */
+/* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
@@ -41,6 +41,21 @@ export default class Navigation extends Component<NavigationProps> {
   constructor(props) {
     super(props);
     this.active = undefined;
+
+    global.ipfsStatusEvents.on('status-change', () => {
+      const status = global.ipfsdStatus;
+
+      const gatewayNavitem = exports.lookupNavItem('gateway');
+      const nodeNavitem = exports.lookupNavItem('node');
+
+      gatewayNavitem.setState({
+        status
+      });
+
+      nodeNavitem.setState({
+        status
+      });
+    });
   }
 
   render() {

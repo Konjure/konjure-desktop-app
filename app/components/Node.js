@@ -4,10 +4,6 @@ import Slider from '@material-ui/lab/Slider';
 
 const os = require('os');
 
-const { lookupNavItem } = require('./static/sidebar/Navigation');
-
-exports.nodeStatus = false;
-
 export default class Node extends Component {
   static formatOsMem(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -24,24 +20,29 @@ export default class Node extends Component {
     super(props);
     this.toggleNode = this.toggleNode.bind(this);
 
-    this.state = {
-      slider: 0
-    };
+    global.ipfsStatusEvents.on('status-change', () => {
+      const status = global.ipfsdStatus;
+
+      if (status === 'down') {
+        exports.nodeStatus = false;
+      } else {
+        exports.nodeStatus = true;
+      }
+
+      this.forceUpdate();
+    });
+
+    this.state = {};
   }
 
   toggleNode() {
-    const nodeNavitem = lookupNavItem('node');
     if (exports.nodeStatus) {
       exports.nodeStatus = false;
-      nodeNavitem.setState({
-        status: 'down'
-      });
+      global.ipfsDaemon.stop();
       // Stop IPFS daemon...
     } else {
       exports.nodeStatus = true;
-      nodeNavitem.setState({
-        status: 'up'
-      });
+      global.startAndBindIPFS();
       // Start IPFS daemon...
     }
 
@@ -58,12 +59,25 @@ export default class Node extends Component {
               <label htmlFor='nodeOnOff' className='switch'>
                 <input type='checkbox'/>
                 <span
-                  className={`node-slider round ${exports.nodeStatus ? 'color' : ''}`}
+                  className={`node-slider round ${(global.ipfsdStatus !== 'down') ? 'color' : ''}`}
                   onClick={() => {
                     this.toggleNode();
                   }}/>
               </label>
-              <h4 className='node-status left'>{exports.nodeStatus ? 'ON' : 'OFF'}</h4>
+              <h4 className='node-status left'>
+                {
+                  (function(status) {
+                    switch (status) {
+                      case 'up':
+                        return 'ON';
+                      case 'down':
+                        return 'OFF';
+                      default:
+                        return 'WAITING';
+                    }
+                  })(global.ipfsdStatus)
+                }
+              </h4>
             </div>
           </div>
         </div>
