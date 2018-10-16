@@ -36,7 +36,13 @@ export default class Node extends Component {
   }
 
   toggleNode() {
-    if (exports.nodeStatus) {
+    const status = global.ipfsdStatus;
+
+    if (status === 'waiting') {
+      return;
+    }
+
+    if (status === 'up') {
       exports.nodeStatus = false;
       global.ipfsDaemon.stop();
       // Stop IPFS daemon...
