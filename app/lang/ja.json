@@ -1,5 +1,5 @@
 {
-  "language": "日本語",
+	"language": "日本語",
 	"navigation": {
 		"gateway": {
 			"title": "ゲートウェイ",
@@ -33,9 +33,10 @@
 		"upload": "あなたのサイトをアップロードする",
 		"cancel": "キャンセル",
 		"publish": "公開する",
-    "upload-window": {
-      "archive-file-types": "アーカイブファイルの種類",
-      "all-file-types": "すべてのファイルタイプ"
-    }
+		"upload-window": {
+			"archive-file-types": "アーカイブファイルの種類",
+			"all-file-types": "すべてのファイルタイプ"
+		},
+		"dragdrop": "gateway.dragdrop"
 	}
 }

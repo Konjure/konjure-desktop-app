@@ -1,41 +1,42 @@
 {
-  "language": "Deutsch",
-  "navigation": {
-    "gateway": {
-      "title": "Tor",
-      "description": "Laden Sie Ihre Website hoch"
-    },
-    "node": {
-      "title": "Netzknoten",
-      "description": "Peer-to-Peer-Netzwerk"
-    },
-    "dashboard": {
-      "title": "Instrumententafel",
-      "description": "Verwalten Sie Ihre Website"
-    },
-    "bazaar": {
-      "title": "Basar",
-      "description": "Plugin-Marktplatz"
-    },
-    "hosting": {
-      "title": "Hosting",
-      "description": "Nutzung und Abrechnung"
-    },
-    "labs": {
-      "title": "Labore",
-      "description": "Entwicklungs-Kit"
-    },
-    "about-me": {
-      "watermark": "Konjure Desktop-Anwendung v%s"
-    }
-  },
-  "gateway": {
-    "upload": "Laden Sie Ihre Website hoch",
-    "cancel": "Stornieren",
-    "publish": "Veröffentlichen",
-    "upload-window": {
-      "archive-file-types": "Dateitypen archivieren",
-      "all-file-types": "Alle Dateitypen"
-    }
-  }
+	"language": "Deutsch",
+	"navigation": {
+		"gateway": {
+			"title": "Tor",
+			"description": "Laden Sie Ihre Website hoch"
+		},
+		"node": {
+			"title": "Netzknoten",
+			"description": "Peer-to-Peer-Netzwerk"
+		},
+		"dashboard": {
+			"title": "Instrumententafel",
+			"description": "Verwalten Sie Ihre Website"
+		},
+		"bazaar": {
+			"title": "Basar",
+			"description": "Plugin-Marktplatz"
+		},
+		"hosting": {
+			"title": "Hosting",
+			"description": "Nutzung und Abrechnung"
+		},
+		"labs": {
+			"title": "Labore",
+			"description": "Entwicklungs-Kit"
+		},
+		"about-me": {
+			"watermark": "Konjure Desktop-Anwendung v%s"
+		}
+	},
+	"gateway": {
+		"upload": "Laden Sie Ihre Website hoch",
+		"cancel": "Stornieren",
+		"publish": "Veröffentlichen",
+		"upload-window": {
+			"archive-file-types": "Dateitypen archivieren",
+			"all-file-types": "Alle Dateitypen"
+		},
+		"dragdrop": "gateway.dragdrop"
+	}
 }

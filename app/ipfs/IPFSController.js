@@ -30,12 +30,12 @@ export default class IPFSController extends EventEmitter {
       return;
     }
 
-    this.ipfsAPI.files.add(file, {progress: (prog) => console.log(`Received: ${prog}`)})
+    this.ipfsAPI.files.add(file, { progress: (prog) => console.log(`Received: ${prog}`) })
       .then((response) => {
-        console.log(response[0].hash);
+        callback(null, response);
         return true;
       }).catch((err) => {
-      console.log(err);
-    });
+        callback(err, null);
+      });
   }
 }

@@ -5,12 +5,21 @@ body {
   font-family: Open Sans, sans-serif;
   letter-spacing: 0.25px;
   overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
 }
 
 #root,
 #root > div {
   height: 100%;
   width: 100%;
+}
+
+input,
+button,
+textarea :focus {
+  outline: none;
 }
 
 img {
@@ -161,6 +170,10 @@ img {
   width: 100%;
   position: relative;
   z-index: 1;
+}
+
+iframe {
+  background-color: white;
 }
 
 .k-menu {
@@ -319,6 +332,23 @@ img {
   color: #999;
 }
 
+.k-slider .track {
+  height: 8px;
+  background-color: #333;
+}
+
+.k-slider .thumb {
+  width: 20px;
+  height: 20px;
+  background: #7ec31e;
+  border-radius: 50%;
+  border: none;
+  -webkit-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
+  -moz-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
+  cursor: pointer;
+}
+
 .slider {
   height: 8px;
   background-color: #333;
@@ -450,6 +480,15 @@ input:checked + .node-slider::before {
 
 .node-slider.round::before {
   border-radius: 50%;
+}
+
+#percent-uploaded {
+  float: left;
+  margin-left: 10px;
+  margin-top: 11px;
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: default;
 }
 
 .k-toolbar-left:hover img {

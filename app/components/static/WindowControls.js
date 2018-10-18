@@ -9,17 +9,24 @@ const i18n = require('i18n');
 
 const { configurei18n } = require('../../lang/locale');
 
-const popupMenu = new Menu();
+let popupMenu;
 const languages = [];
 
 function initLanguages () {
+  popupMenu = new Menu();
+
   i18n.getLocales().forEach(loc => {
+    // eslint-disable-next-line global-require
+    const { render } = require('../../index');
+
+    // eslint-disable-next-line global-require
+    const root = require('../../containers/Root');
+
     languages.push({
       label: i18n.__({phrase: 'language', locale: loc}),
       click () {
         configurei18n(loc);
-        // eslint-disable-next-line global-require
-        require('../../index').render(require('../../containers/Root'))
+        render(root);
       }
     })
   });

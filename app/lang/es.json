@@ -1,41 +1,42 @@
 {
-  "language": "Español",
-  "navigation": {
-    "gateway": {
-      "title": "Puerta",
-      "description": "Cargue su sitio web"
-    },
-    "node": {
-      "title": "Nodo",
-      "description": "Red de igual a igual"
-    },
-    "dashboard": {
-      "title": "Tablero",
-      "description": "Administre su sitio web"
-    },
-    "bazaar": {
-      "title": "Bazar",
-      "description": "Mercado de complementos"
-    },
-    "hosting": {
-      "title": "Alojamiento",
-      "description": "Uso y facturación"
-    },
-    "labs": {
-      "title": "Labs",
-      "description": "Kit de desarrollo"
-    },
-    "about-me": {
-      "watermark": "Aplicación de escritorio Konjure v%s"
-    }
-  },
-  "gateway": {
-    "upload": "Cargue su sitio web",
-    "cancel": "Cancelar",
-    "publish": "Publicar",
-    "upload-window": {
-      "archive-file-types": "Archivar tipos de archivos",
-      "all-file-types": "Todos los tipos de archivos"
-    }
-  }
+	"language": "Español",
+	"navigation": {
+		"gateway": {
+			"title": "Puerta",
+			"description": "Cargue su sitio web"
+		},
+		"node": {
+			"title": "Nodo",
+			"description": "Red de igual a igual"
+		},
+		"dashboard": {
+			"title": "Tablero",
+			"description": "Administre su sitio web"
+		},
+		"bazaar": {
+			"title": "Bazar",
+			"description": "Mercado de complementos"
+		},
+		"hosting": {
+			"title": "Alojamiento",
+			"description": "Uso y facturación"
+		},
+		"labs": {
+			"title": "Labs",
+			"description": "Kit de desarrollo"
+		},
+		"about-me": {
+			"watermark": "Aplicación de escritorio Konjure v%s"
+		}
+	},
+	"gateway": {
+		"upload": "Cargue su sitio web",
+		"cancel": "Cancelar",
+		"publish": "Publicar",
+		"upload-window": {
+			"archive-file-types": "Archivar tipos de archivos",
+			"all-file-types": "Todos los tipos de archivos"
+		},
+		"dragdrop": "gateway.dragdrop"
+	}
 }

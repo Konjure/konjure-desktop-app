@@ -37,6 +37,7 @@
 		"upload": "Upload your website",
 		"cancel": "Cancel",
 		"publish": "Publish",
+    "dragdrop": "Drag & drop a zip file here",
 		"upload-window": {
 			"archive-file-types": "Archive File Types",
 			"all-file-types": "All File Types"

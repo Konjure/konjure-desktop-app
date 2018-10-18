@@ -22,12 +22,7 @@ export default class Node extends Component {
 
     global.ipfsStatusEvents.on('status-change', () => {
       const status = global.ipfsdStatus;
-
-      if (status === 'down') {
-        exports.nodeStatus = false;
-      } else {
-        exports.nodeStatus = true;
-      }
+      exports.nodeStatus = status !== 'down';
 
       this.forceUpdate();
     });
@@ -79,7 +74,7 @@ export default class Node extends Component {
                       case 'down':
                         return 'OFF';
                       default:
-                        return 'WAITING';
+                        return 'STARTING';
                     }
                   })(global.ipfsdStatus)
                 }
