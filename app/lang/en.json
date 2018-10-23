@@ -38,6 +38,7 @@
 		"cancel": "Cancel",
 		"publish": "Publish",
 		"dragdrop": "Drag & drop a zip file here",
+    "open-in-browser": "Click to open in browser",
 		"upload-window": {
 			"archive-file-types": "Archive File Types",
 			"all-file-types": "All File Types"

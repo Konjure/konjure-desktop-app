@@ -23,7 +23,8 @@ export default class Gateway extends Component<Props> {
     this.state = {
       preppedForUpload: null,
       pageURL: null,
-      statusBar: 'Waiting for Upload'
+      statusBar: 'Waiting for Upload',
+      statusHover: false
     };
 
     this.prepareUpload = this.prepareUpload.bind(this);
@@ -133,13 +134,13 @@ export default class Gateway extends Component<Props> {
 
   setWebpage(hash) {
     console.log(`Published to IPFS, hash ${hash}`);
-
     const url = `https://ipfs.io/ipfs/${hash}`;
+
     this.state.pageURL = url;
-    this.state.statusBar = <div onClick={() => {
-      shell.openExternal(url);
-    }}>
-      Click to open in browser.
+    this.state.statusBar = <div
+      className="underline-on-hover"
+      onClick={() => {shell.openExternal(url);}}>
+      {__('gateway.open-in-browser')}
     </div>;
 
     this.forceUpdate();
@@ -218,7 +219,7 @@ export default class Gateway extends Component<Props> {
                   }}>
             <div>{this.getUploadText()}</div>
           </button>
-          <h5 id="percent-uploaded">{this.state.statusBar}</h5>
+          <h5 id="percent-uploaded"> {this.state.statusBar}</h5>
           <div className={`button k-gateway-button material slight-rounded no-select publish-button right
             ${(preppedForUpload != null && preppedForUpload.length > 0 ? '' : 'disabled')}`
           } onClick={this.publishPayload}>

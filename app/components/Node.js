@@ -59,7 +59,7 @@ export default class Node extends Component {
             <div className='vertical-center-inner'>
               <h1 className='left'>Konjure Node</h1>
               <label htmlFor='nodeOnOff' className='switch'>
-                <input type='checkbox' checked={global.ipfsdStatus !== 'down'} defaultChecked={false}/>
+                <input type='checkbox' checked={global.ipfsdStatus !== 'down'} readOnly={true}/>
                 <span
                   className={`node-slider round ${(global.ipfsdStatus !== 'down') ? 'color' : ''}`}
                   onClick={() => {

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
+const { shell } = require('electron');
+
 const { __ } = require('i18n');
 
 const { version } = require('../../../../package');
@@ -126,6 +128,7 @@ export class NavigationItem extends Component<ItemProps> {
           `button k-option material ${usable ? 'active' : 'inactive'} no-select ${current ? 'current' : ''}`
         } onClick={() => {
           if (!usable || currentlyOpen === this) {
+            shell.beep();
             return;
           }
 
