@@ -95,6 +95,7 @@ function buildWindows() {
 
       splashWindow.destroy();
       mainWindow.show();
+      mainWindow.maximize();
     });
   });
 

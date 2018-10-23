@@ -21,7 +21,8 @@ const navigation = [
   { name: 'dashboard', usable: false },
   { name: 'bazaar', usable: false },
   { name: 'hosting', usable: false },
-  { name: 'labs', usable: false }
+  { name: 'labs', usable: false },
+  { name: 'settings', usable: false }
 ];
 
 export default class App extends Component {

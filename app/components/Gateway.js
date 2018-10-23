@@ -1,18 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 // @flow
 import React, { Component } from 'react';
-import Iframe from 'react-iframe';
+import IFrame from 'react-iframe';
 
-
-const { remote } = require('electron');
+const { remote, shell } = require('electron');
 
 const { dialog } = remote;
 
-const unzipper = require('unzipper');
-
-const stream = require('stream');
-
 const fs = require('fs');
+const path = require('path');
 const os = require('os');
 
 const { __ } = require('i18n');
@@ -35,6 +31,7 @@ export default class Gateway extends Component<Props> {
     this.cancelPayload = this.cancelPayload.bind(this);
     this.getUploadText = this.getUploadText.bind(this);
     this.getWebsiteFrame = this.getWebsiteFrame.bind(this);
+    this.setWebpage = this.setWebpage.bind(this);
   }
 
   prepareUpload(file) {
@@ -51,34 +48,108 @@ export default class Gateway extends Component<Props> {
       return;
     }
 
-    const entries = [];
+    if (fs.lstatSync(preppedForUpload).isDirectory()) {
+      const walk = (dir) => new Promise((resolve, reject) => {
+        fs.readdir(dir, (error, files) => {
+          if (error) {
+            return reject(error);
+          }
 
-    fs.createReadStream(preppedForUpload)
-      .pipe(unzipper.Parse())
-      .pipe(stream.Transform({
-        objectMode: true,
-        transform(entry, encoding, callback) {
-          entries.push(entry);
-          entry.autodrain();
-          callback();
-        }
-      }))
-      .on('finish', () => {
-        Object.values(entries).forEach(entry => {
-          const { path, type, size } = entry;
-          console.log(`${path}, ${type}, ${size}`);
+          // eslint-disable-next-line no-shadow
+          Promise.all(files.map((file) => new Promise((resolve, reject) => {
+            const filepath = path.join(dir, file);
+            fs.stat(filepath, (statError, stats) => {
+              if (statError) {
+                return reject(statError);
+              }
+              if (stats.isDirectory()) {
+                walk(filepath).then(resolve).catch((err) => reject(err));
+              } else if (stats.isFile()) {
+                resolve(filepath);
+              }
+            });
+          })))
+            .then((foldersContents) =>
+              resolve(foldersContents.reduce((all, folderContents) => all.concat(folderContents), []))
+            )
+            .catch((err) => {
+              reject(err);
+            });
         });
       });
 
-    /* global.ipfsController.saveToIPFS(fs.readFileSync(`${preppedForUpload}`), (err, data) => {
-      if (err === null) {
-        console.log(`Published, got hash ${data[0].hash}`);
-        this.state.pageURL = `https://ipfs.io/ipfs/${data[0].hash}`;
-        this.forceUpdate();
-      }
-    }); */
+      this.setStatusBar('Prepare files for upload...');
+      walk(preppedForUpload).then(files => {
+        this.setStatusBar('Uploading files to IPFS');
+        const ipfs = global.ipfsController.getAPI();
+
+        ipfs.files.mkdir('/site', mkdirErr => {
+          if (mkdirErr) {
+            console.log(`Error: ${mkdirErr}`);
+            return;
+          }
+
+          Promise.all(files.map(file => {
+            const ipfsPath = `/${path.join('site', file.substring(preppedForUpload.length + 1)).replace(/\\/g, '/')}`;
+            console.log(`Discovered ${ipfsPath}`);
+            const promise = ipfs.files.write(
+              ipfsPath,
+              fs.readFileSync(file),
+              {
+                create: true,
+                parents: true
+              });
+            return promise;
+          })).then(() => {
+            ipfs.files.stat('/site', (err, stats) => {
+              if (err) {
+                console.log(`Error: ${err}`);
+                return;
+              }
+
+              const { hash } = stats;
+              this.setWebpage(hash);
+            });
+            return true;
+          }).catch((err) => {
+            throw err;
+          });
+        });
+
+        return true;
+      }).catch((err) => {
+        console.log(`Error when attempting to read directory ${preppedForUpload}, ${err.toString()}`);
+      });
+    } else {
+      global.ipfsController.saveToIPFS(fs.readFileSync(`${preppedForUpload}`), (err, data) => {
+        if (err === null) {
+          this.setWebpage(data[0].hash);
+        }
+      });
+    }
 
     this.cancelPayload();
+  }
+
+  setWebpage(hash) {
+    console.log(`Published to IPFS, hash ${hash}`);
+
+    const url = `https://ipfs.io/ipfs/${hash}`;
+    this.state.pageURL = url;
+    this.state.statusBar = <div onClick={() => {
+      shell.openExternal(url);
+    }}>
+      Click to open in browser.
+    </div>;
+
+    this.forceUpdate();
+  }
+
+  setStatusBar(statusBar) {
+    this.setState({
+      statusBar
+    });
+    this.forceUpdate();
   }
 
   cancelPayload() {
@@ -102,16 +173,16 @@ export default class Gateway extends Component<Props> {
     const { pageURL } = this.state;
 
     if (pageURL !== null) {
-      return <Iframe url={pageURL}/>;
+      return <IFrame url={this.state.pageURL} />;
     }
 
     return <div className="vertical-center-outer">
-              <div className="vertical-center-inner">
-                <img src="res/image/drop.png" className="center" alt="dragndrop"/>
-                <br/>
-                <h6 className="text-center">{__('gateway.dragdrop')}</h6>
-              </div>
-            </div>;
+      <div className="vertical-center-inner">
+        <img src="res/image/drop.png" className="center" alt="dragndrop"/>
+        <br/>
+        <h6 className="text-center">{__('gateway.dragdrop')}</h6>
+      </div>
+    </div>;
   }
 
   render() {
@@ -124,7 +195,7 @@ export default class Gateway extends Component<Props> {
       }}>
         <div className="k-gateway-frame">
           <div className="k-website">
-            { this.getWebsiteFrame() }
+            {this.getWebsiteFrame()}
           </div>
         </div>
         <div className="k-gateway-toolbar">
@@ -133,14 +204,10 @@ export default class Gateway extends Component<Props> {
                     const defaultpath = preppedForUpload != null ? preppedForUpload : os.homedir();
                     dialog.showOpenDialog(mainWindow, {
                       properties: [
-                        'openFile', 'multiSelections'
+                        'openDirectory'
                       ],
                       title: __('gateway.upload'),
-                      defaultPath: defaultpath,
-                      filters: [
-                        { name: __('gateway.upload-window.archive-file-types'), extensions: ['zip'] },
-                        { name: __('gateway.upload-window.all-file-types'), extensions: ['*'] }
-                      ]
+                      defaultPath: defaultpath
                     }, (fileNames) => {
                       if (fileNames === undefined) {
                         return;

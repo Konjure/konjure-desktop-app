@@ -28,16 +28,16 @@
 		"about-me": {
 			"watermark": "Konjure Desktop App v%s"
 		},
-		"undefined": {
-			"title": "navigation.undefined.title",
-			"description": "navigation.undefined.description"
+		"settings": {
+			"title": "Settings",
+			"description": "Application settings"
 		}
 	},
 	"gateway": {
 		"upload": "Upload your website",
 		"cancel": "Cancel",
 		"publish": "Publish",
-    "dragdrop": "Drag & drop a zip file here",
+		"dragdrop": "Drag & drop a zip file here",
 		"upload-window": {
 			"archive-file-types": "Archive File Types",
 			"all-file-types": "All File Types"

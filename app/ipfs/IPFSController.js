@@ -10,7 +10,7 @@ export default class IPFSController extends EventEmitter {
 
     this.bindAPI = this.bindAPI.bind(this);
     this.unbindAPI = this.unbindAPI.bind(this);
-    this.saveToIPFS = this.saveToIPFS.bind(this);
+    this.getAPI = this.getAPI.bind(this);
   }
 
   bindAPI(api) {
@@ -23,19 +23,7 @@ export default class IPFSController extends EventEmitter {
     this.started = false;
   }
 
-  saveToIPFS(file, callback) {
-    if (!this.started) {
-      console.log(`IPFS not in ready state! Pushing to task list #${this.tasks.length + 1}`);
-      this.tasks.push(() => this.saveToIPFS(file, callback));
-      return;
-    }
-
-    this.ipfsAPI.files.add(file, { progress: (prog) => console.log(`Received: ${prog}`) })
-      .then((response) => {
-        callback(null, response);
-        return true;
-      }).catch((err) => {
-        callback(err, null);
-      });
+  getAPI() {
+    return this.ipfsAPI;
   }
 }

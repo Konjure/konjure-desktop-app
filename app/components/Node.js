@@ -18,7 +18,6 @@ export default class Node extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleNode = this.toggleNode.bind(this);
 
     global.ipfsStatusEvents.on('status-change', () => {
       const status = global.ipfsdStatus;
@@ -28,6 +27,8 @@ export default class Node extends Component {
     });
 
     this.state = {};
+
+    this.toggleNode = this.toggleNode.bind(this);
   }
 
   toggleNode() {
@@ -58,7 +59,7 @@ export default class Node extends Component {
             <div className='vertical-center-inner'>
               <h1 className='left'>Konjure Node</h1>
               <label htmlFor='nodeOnOff' className='switch'>
-                <input type='checkbox'/>
+                <input type='checkbox' checked={global.ipfsdStatus !== 'down'} defaultChecked={false}/>
                 <span
                   className={`node-slider round ${(global.ipfsdStatus !== 'down') ? 'color' : ''}`}
                   onClick={() => {
@@ -108,7 +109,7 @@ export default class Node extends Component {
                     <Slider
                       // eslint-disable-next-line react/destructuring-assignment
                       value={this.state[slider.title] || 0}
-                      disabled={exports.nodeStatus}
+                      disabled={global.ipfsdStatus !== 'down'}
                       min={slider.min}
                       max={slider.max}
                       className={`slider ${slider.title.toLowerCase()}`}
