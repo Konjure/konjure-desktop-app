@@ -226,6 +226,10 @@ export default class Gateway extends Component<Props> {
         this.prepareUpload(event.dataTransfer.files[0].path);
         return false;
       }}>
+        <div className="k-alert success">
+
+          <p>This is an example alert!</p>
+        </div>
         <div className="k-gateway-frame">
           <div className="k-website">
             {this.getWebsiteFrame()}
