@@ -513,3 +513,28 @@ input:checked + .node-slider::before {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.k-alert {
+  position: absolute;
+  top: 40px;
+  right: 15px;
+  background-color: #191919;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #777;
+}
+
+.k-alert.success {
+  color: #7ec31e;
+  border-color: #7ec31e;
+}
+
+.k-alert.warning {
+  color: #eae42e;
+  border-color: #eae42e;
+}
+
+.k-alert.error {
+  color: #e03a3a;
+  border-color: #e03a3a;
+}
