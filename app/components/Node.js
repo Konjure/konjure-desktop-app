@@ -6,14 +6,16 @@ import { withStyles } from '@material-ui/core/styles';
 
 const os = require('os');
 
-const memBound = ['Bytes', 'KB', 'MB', 'GB', 'TB'][Math.floor(Math.log(os.totalmem()) / Math.log(1024))];
+const { __ } = require('../lang/locale');
+
+const memBound = (mem) => ['Bytes', 'KB', 'MB', 'GB', 'TB'][Math.floor(Math.log(mem) / Math.log(1024))];
 
 const formatOsMem = (bytes) => {
   if (bytes === 0) {
     return '0 Bytes';
   }
 
-  return `${maxMem(bytes)} ${memBound}`;
+  return `${maxMem(bytes)} ${memBound(bytes)}`;
 };
 
 const maxMem = (bytes) => {
@@ -25,20 +27,20 @@ const sliders =
   [
     {
       title: 'CPU',
-      desc: <h6>Select how much available CPU you would like Konjure to use</h6>,
-      min: 0,
+      desc: <h6>{__('node.cpu.description')}</h6>,
+      min: 5,
       max: 100,
       id: 'cpu-amount',
       format: (val) => `${val.toFixed(0)}%`
     },
     {
       title: 'Memory',
-      desc: <h6>Select how much RAM Konjure can use (<span>{formatOsMem(os.totalmem())}</span> total)
+      desc: <h6>{__('node.memory.description', formatOsMem(os.totalmem()))}
       </h6>,
-      min: 0,
+      min: 134217727, // 128mb
       max: os.totalmem(),
       id: 'ram-amount',
-      format: (val) => `${maxMem(val)} ${memBound}`
+      format: (val) => `${maxMem(val)} ${memBound(val)}`
     }
   ];
 
@@ -107,7 +109,7 @@ export default class Node extends Component {
         <div className='k-node-top'>
           <div className='vertical-center-outer'>
             <div className='vertical-center-inner'>
-              <h1 className='left'>Konjure Node</h1>
+              <h1 className='left'>{__('node.title')}</h1>
               <label htmlFor='nodeOnOff' className='switch'>
                 <input type='checkbox' checked={global.ipfsdStatus !== 'down'} readOnly/>
                 <span
@@ -139,7 +141,7 @@ export default class Node extends Component {
               <div key={slider.title} className='k-slider'>
                 <div className='vertical-center-outer'>
                   <div className='vertical-center-inner'>
-                    <h4>{slider.title.toUpperCase()}</h4>
+                    <h4>{__(`node.${slider.title.toLowerCase()}.title`)}</h4>
                     {slider.desc}
                     <br/><br/>
                     <StyledSlider

@@ -19,7 +19,7 @@ exports.setLanguage = function(language) {
 
 exports.getLocales = () => Object.keys(langmodules);
 
-exports.__ = (translation) => {
+exports.__ = (translation, ...translations) => {
   const split = translation.split(/\./);
 
   if (split.length === 0) {
@@ -32,6 +32,10 @@ exports.__ = (translation) => {
   for (let i = 0; i < split.length; ++i) {
     obj = lang[split[i]];
     lang = obj;
+  }
+
+  for (let i = 0; i < translations.length; ++i) {
+    lang = lang.replace('%s', translations[i])
   }
 
   return lang;
