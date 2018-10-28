@@ -1,21 +1,71 @@
 // @flow
 import React, { Component } from 'react';
+
 import Slider from '@material-ui/lab/Slider';
+import { withStyles } from '@material-ui/core/styles';
 
 const os = require('os');
 
-export default class Node extends Component {
-  static formatOsMem(bytes) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+const memBound = ['Bytes', 'KB', 'MB', 'GB', 'TB'][Math.floor(Math.log(os.totalmem()) / Math.log(1024))];
 
-    if (bytes === 0) {
-      return '0 Bytes';
-    }
-
-    const exp = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${Math.round(bytes / (1024 ** exp), 2)} ${sizes[exp]}`;
+const formatOsMem = (bytes) => {
+  if (bytes === 0) {
+    return '0 Bytes';
   }
 
+  return `${maxMem(bytes)} ${memBound}`;
+};
+
+const maxMem = (bytes) => {
+  const exp = Math.floor(Math.log(bytes) / Math.log(1024));
+  return Math.round(bytes / (1024 ** exp), 2);
+};
+
+const sliders =
+  [
+    {
+      title: 'CPU',
+      desc: <h6>Select how much available CPU you would like Konjure to use</h6>,
+      min: 0,
+      max: 100,
+      id: 'cpu-amount',
+      format: (val) => `${val.toFixed(0)}%`
+    },
+    {
+      title: 'Memory',
+      desc: <h6>Select how much RAM Konjure can use (<span>{formatOsMem(os.totalmem())}</span> total)
+      </h6>,
+      min: 0,
+      max: os.totalmem(),
+      id: 'ram-amount',
+      format: (val) => `${maxMem(val)} ${memBound}`
+    }
+  ];
+
+const StyledSlider = withStyles({
+  root: {
+    backgroundColor: 'transparent'
+  },
+  trackBefore: {
+    height: '4px',
+    backgroundColor: '#7ec31e'
+  },
+  trackAfter: {
+    height: '4px',
+    backgroundColor: '#333'
+  },
+  thumb: {
+    width: '20px',
+    height: '20px',
+    backgroundColor: '#7ec31e',
+    borderRadius: '50%',
+    border: 'none',
+    'box-shadow': '0 0 0 2px rgba(34, 34, 34, 1)',
+    cursor: 'pointer'
+  }
+})(Slider);
+
+export default class Node extends Component {
   constructor(props) {
     super(props);
 
@@ -59,7 +109,7 @@ export default class Node extends Component {
             <div className='vertical-center-inner'>
               <h1 className='left'>Konjure Node</h1>
               <label htmlFor='nodeOnOff' className='switch'>
-                <input type='checkbox' checked={global.ipfsdStatus !== 'down'} readOnly={true}/>
+                <input type='checkbox' checked={global.ipfsdStatus !== 'down'} readOnly/>
                 <span
                   className={`node-slider round ${(global.ipfsdStatus !== 'down') ? 'color' : ''}`}
                   onClick={() => {
@@ -85,30 +135,16 @@ export default class Node extends Component {
         </div>
         <div className='k-node-left'>
           {
-            [
-              {
-                title: 'CPU',
-                desc: <h6>Select how much available CPU you would like Konjure to use</h6>,
-                min: 0,
-                max: 100
-              },
-              {
-                title: 'Memory',
-                desc: <h6>Select how much RAM Konjure can use (<span>{Node.formatOsMem(os.totalmem())}</span> total)
-                </h6>,
-                min: 0,
-                max: 16
-              }
-            ].map((slider) =>
+            sliders.map((slider) =>
               <div key={slider.title} className='k-slider'>
                 <div className='vertical-center-outer'>
                   <div className='vertical-center-inner'>
                     <h4>{slider.title.toUpperCase()}</h4>
                     {slider.desc}
                     <br/><br/>
-                    <Slider
+                    <StyledSlider
                       // eslint-disable-next-line react/destructuring-assignment
-                      value={this.state[slider.title] || 0}
+                      value={this.state[slider.title] || slider.max}
                       disabled={global.ipfsdStatus !== 'down'}
                       min={slider.min}
                       max={slider.max}
@@ -125,27 +161,20 @@ export default class Node extends Component {
           }
         </div>
         <div className='k-node-right'>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <input className='display-amount' id='cpu-amount' readOnly/>
+          {
+            sliders.map((slider) =>
+              <div className='k-slider'>
+                <div className='vertical-center-outer'>
+                  <div className='vertical-center-inner'>
+                    <input className='display-amount' id={slider.id} readOnly value={(() => {
+                      const val = this.state[slider.title] || slider.max;
+                      return slider.format(val);
+                    })()}/>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <input className='display-amount' id='ram-amount' readOnly/>
-              </div>
-            </div>
-          </div>
-          <div className='k-slider'>
-            <div className='vertical-center-outer'>
-              <div className='vertical-center-inner'>
-                <input className='display-amount' id='network-amount' readOnly/>
-              </div>
-            </div>
-          </div>
+            )
+          }
         </div>
       </div>
     );

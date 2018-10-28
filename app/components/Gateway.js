@@ -1,9 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 // @flow
+import CircularProgress from '@material-ui/core/CircularProgress';
 import React, { Component } from 'react';
 import IFrame from 'react-iframe';
 
 const { remote, shell } = require('electron');
+
+const currentWindow = remote.getCurrentWindow();
 
 const { dialog } = remote;
 
@@ -11,20 +14,52 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const { __ } = require('i18n');
+const { __ } = require('../lang/locale');
+
+const { sha256bs58HashString } = require('../utils/Crypto');
 
 const mainWindow = remote.getCurrentWindow();
 
 type Props = {};
 
 export default class Gateway extends Component<Props> {
+  static walk(dir) {
+    return new Promise((resolve, reject) => {
+      fs.readdir(dir, (error, files) => {
+        if (error) {
+          return reject(error);
+        }
+
+        // eslint-disable-next-line no-shadow
+        Promise.all(files.map((file) => new Promise((resolve, reject) => {
+          const filepath = path.join(dir, file);
+          fs.stat(filepath, (statError, stats) => {
+            if (statError) {
+              return reject(statError);
+            }
+            if (stats.isDirectory()) {
+              Gateway.walk(filepath).then(resolve).catch((err) => reject(err));
+            } else if (stats.isFile()) {
+              resolve(filepath);
+            }
+          });
+        })))
+          .then((foldersContents) =>
+            resolve(foldersContents.reduce((all, folderContents) => all.concat(folderContents), []))
+          )
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       preppedForUpload: null,
       pageURL: null,
-      statusBar: 'Waiting for Upload',
-      statusHover: false
+      statusBar: 'Waiting for upload'
     };
 
     this.prepareUpload = this.prepareUpload.bind(this);
@@ -40,7 +75,10 @@ export default class Gateway extends Component<Props> {
       return;
     }
 
-    this.setState({ preppedForUpload: file });
+    this.setState({
+      preppedForUpload: file,
+      statusBar: 'Ready to upload'
+    });
   }
 
   publishPayload() {
@@ -50,63 +88,51 @@ export default class Gateway extends Component<Props> {
     }
 
     if (fs.lstatSync(preppedForUpload).isDirectory()) {
-      const walk = (dir) => new Promise((resolve, reject) => {
-        fs.readdir(dir, (error, files) => {
-          if (error) {
-            return reject(error);
-          }
-
-          // eslint-disable-next-line no-shadow
-          Promise.all(files.map((file) => new Promise((resolve, reject) => {
-            const filepath = path.join(dir, file);
-            fs.stat(filepath, (statError, stats) => {
-              if (statError) {
-                return reject(statError);
-              }
-              if (stats.isDirectory()) {
-                walk(filepath).then(resolve).catch((err) => reject(err));
-              } else if (stats.isFile()) {
-                resolve(filepath);
-              }
-            });
-          })))
-            .then((foldersContents) =>
-              resolve(foldersContents.reduce((all, folderContents) => all.concat(folderContents), []))
-            )
-            .catch((err) => {
-              reject(err);
-            });
-        });
-      });
-
       this.setStatusBar('Prepare files for upload...');
-      walk(preppedForUpload).then(files => {
+      Gateway.walk(preppedForUpload).then(files => {
         this.setStatusBar('Uploading files to IPFS');
-        const ipfs = global.ipfsController.getAPI();
 
-        ipfs.files.mkdir('/site', mkdirErr => {
+        const fileCount = files.length;
+        let currentCount = 0;
+
+        const ipfs = global.ipfsController.getAPI();
+        const konjid = sha256bs58HashString(`${new Date().getMilliseconds()}`);
+        console.log(`Beginning site upload with KonjID: ${konjid}`);
+
+        ipfs.files.mkdir(`/${konjid}`, mkdirErr => {
           if (mkdirErr) {
-            console.log(`Error: ${mkdirErr}`);
+            console.log(mkdirErr);
             return;
           }
 
+          this.setState({ pageURL: null });
+
           Promise.all(files.map(file => {
-            const ipfsPath = `/${path.join('site', file.substring(preppedForUpload.length + 1)).replace(/\\/g, '/')}`;
-            console.log(`Discovered ${ipfsPath}`);
-            const promise = ipfs.files.write(
-              ipfsPath,
-              fs.readFileSync(file),
-              {
-                create: true,
-                parents: true
+            const ipfsPath = `/${path.join(konjid, file.substring(preppedForUpload.length + 1)).replace(/\\/g, '/')}`;
+            const promise = new Promise((resolve, reject) => {
+              ipfs.files.write(ipfsPath, fs.readFileSync(file), { create: true, parents: true }, (err) => {
+                if (err) {
+                  reject(err);
+                }
+
+                console.log(`Uploaded ${ipfsPath}`);
+
+                const percentage = (++currentCount / fileCount);
+                this.setStatusBar(`Uploading files to IPFS (${(percentage * 100).toFixed(2)}/%)`);
+                currentWindow.setProgressBar(percentage);
+
+                resolve();
               });
+            });
             return promise;
           })).then(() => {
-            ipfs.files.stat('/site', (err, stats) => {
+            ipfs.files.stat(`/${konjid}`, (err, stats) => {
               if (err) {
-                console.log(`Error: ${err}`);
+                console.log(`Stat Error: ${err}`);
                 return;
               }
+
+              currentWindow.setProgressBar(0, { mode: 'none' });
 
               const { hash } = stats;
               this.setWebpage(hash);
@@ -119,7 +145,8 @@ export default class Gateway extends Component<Props> {
 
         return true;
       }).catch((err) => {
-        console.log(`Error when attempting to read directory ${preppedForUpload}, ${err.toString()}`);
+        this.cancelPayload('Error during upload');
+        throw err;
       });
     } else {
       global.ipfsController.saveToIPFS(fs.readFileSync(`${preppedForUpload}`), (err, data) => {
@@ -139,7 +166,9 @@ export default class Gateway extends Component<Props> {
     this.state.pageURL = url;
     this.state.statusBar = <div
       className="underline-on-hover"
-      onClick={() => {shell.openExternal(url);}}>
+      onClick={() => {
+        shell.openExternal(url);
+      }}>
       {__('gateway.open-in-browser')}
     </div>;
 
@@ -153,10 +182,11 @@ export default class Gateway extends Component<Props> {
     this.forceUpdate();
   }
 
-  cancelPayload() {
+  cancelPayload(error = null) {
     this.setState({
       preppedForUpload: null,
-      statusBar: 'Waiting for Upload'
+      statusBar: error === null ? 'Waiting for Upload' : `${error}`,
+      pageURL: null
     });
   }
 
@@ -174,7 +204,9 @@ export default class Gateway extends Component<Props> {
     const { pageURL } = this.state;
 
     if (pageURL !== null) {
-      return <IFrame url={this.state.pageURL} />;
+      return <IFrame url={this.state.pageURL}>
+        <p>Error while attempting to display IFrame, view page externally with link below.</p>
+      </IFrame>;
     }
 
     return <div className="vertical-center-outer">
@@ -187,7 +219,7 @@ export default class Gateway extends Component<Props> {
   }
 
   render() {
-    const { preppedForUpload } = this.state;
+    const { preppedForUpload, pageURL } = this.state;
     return (
       <div className="k-content gateway" onDrop={event => {
         event.preventDefault();
@@ -229,9 +261,15 @@ export default class Gateway extends Component<Props> {
           cancel-button right ${
             (preppedForUpload != null && preppedForUpload.length > 0 ? '' : 'disabled')
             }`}
-               onClick={this.cancelPayload}>
+               onClick={() => this.cancelPayload()}>
             {__('gateway.cancel')}
           </div>
+          {pageURL != null ?
+            <div className='button k-gateway-button material slight-rounded no-select cancel-button right'
+                 onClick={() => this.cancelPayload()}>
+              {__('gateway.close')}
+            </div> : ''
+          }
         </div>
       </div>
     );

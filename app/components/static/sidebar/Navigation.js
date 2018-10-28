@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 
 const { shell } = require('electron');
 
-const { __ } = require('i18n');
+const { __ } = require('../../../lang/locale');
 
 const { version } = require('../../../../package');
 

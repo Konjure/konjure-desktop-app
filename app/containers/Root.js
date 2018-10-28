@@ -5,7 +5,7 @@ import {ConnectedRouter} from 'react-router-redux';
 import App from './App';
 import type {Store} from '../reducers/types';
 
-const { configurei18n } = require('../lang/locale');
+const { setLanguage } = require('../lang/locale');
 
 type Props = {
   store: Store,
@@ -15,7 +15,7 @@ type Props = {
 export default class Root extends Component<Props> {
   constructor(props) {
     super(props);
-    configurei18n();
+    setLanguage('en');
   }
 
   render() {

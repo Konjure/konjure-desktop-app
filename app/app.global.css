@@ -391,7 +391,6 @@ iframe {
   border-radius: 50%;
   border: none;
   -webkit-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
-  -moz-box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
   box-shadow: 0 0 0 2px rgba(34, 34, 34, 1);
   cursor: pointer;
 }
@@ -507,5 +506,10 @@ input:checked + .node-slider::before {
 
 .k-toolbar-button:hover {
   background-color: #333;
+  cursor: pointer;
+}
+
+.underline-on-hover:hover {
+  text-decoration: underline;
   cursor: pointer;
 }

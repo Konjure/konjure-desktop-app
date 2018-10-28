@@ -16,10 +16,10 @@ import { dependencies } from '../../package.json';
     // Find the reason for why the dependency is installed. If it is installed
     // because of a devDependency then that is okay. Warn when it is installed
     // because of a dependency
-    const dependenciesObject = JSON.parse(
+    const { dependencies: dependenciesObject } = JSON.parse(
       execSync(`npm ls ${nativeDeps.join(' ')} --json`).toString()
     );
-    const rootDependencies = Object.keys(dependenciesObject.dependencies);
+    const rootDependencies = Object.keys(dependenciesObject);
     const filteredRootDependencies = rootDependencies.filter(rootDependency =>
       dependenciesKeys.includes(rootDependency)
     );
@@ -33,19 +33,19 @@ ${chalk.whiteBright.bgYellow.bold(
       )}
 ${chalk.bold(filteredRootDependencies.join(', '))} ${
         plural ? 'are native dependencies' : 'is a native dependency'
-      } and should be installed inside of the "./app" folder.
+        } and should be installed inside of the "./app" folder.
 
 
 First uninstall the packages from "./package.json":
-${chalk.whiteBright.bgGreen.bold('npm uninstall your-package')}
+${chalk.whiteBright.bgGreen.bold('yarn remove your-package')}
 
 ${chalk.bold(
         'Then, instead of installing the package to the root "./package.json":'
       )}
-${chalk.whiteBright.bgRed.bold('npm install your-package --save')}
+${chalk.whiteBright.bgRed.bold('yarn add your-package')}
 
 ${chalk.bold('Install the package to "./app/package.json"')}
-${chalk.whiteBright.bgGreen.bold('cd ./app && npm install your-package --save')}
+${chalk.whiteBright.bgGreen.bold('cd ./app && yarn add your-package')}
 
 
 Read more about native dependencies at:

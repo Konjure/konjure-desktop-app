@@ -1,4 +1,6 @@
-{
+const pkg = require("../../package");
+
+exports.translations = {
 	"language": "English",
 	"navigation": {
 		"gateway": {
@@ -26,7 +28,7 @@
 			"description": "Development kit"
 		},
 		"about-me": {
-			"watermark": "Konjure Desktop App v%s"
+			"watermark": `Konjure Desktop App v${pkg.version}`
 		},
 		"settings": {
 			"title": "Settings",
@@ -37,11 +39,12 @@
 		"upload": "Upload your website",
 		"cancel": "Cancel",
 		"publish": "Publish",
+    "close": "Close",
 		"dragdrop": "Drag & drop a zip file here",
-    "open-in-browser": "Click to open in browser",
+		"open-in-browser": "Click to open in browser",
 		"upload-window": {
 			"archive-file-types": "Archive File Types",
 			"all-file-types": "All File Types"
 		}
 	}
-}
+};
