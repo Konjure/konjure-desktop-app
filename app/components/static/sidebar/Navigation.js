@@ -50,6 +50,18 @@ export default class Navigation extends Component<NavigationProps> {
       const gatewayNavitem = exports.lookupNavItem('gateway');
       const nodeNavitem = exports.lookupNavItem('node');
 
+      gatewayNavitem.status = { status };
+      nodeNavitem.status = { status };
+    });
+  }
+
+  componentDidMount() {
+    global.ipfsStatusEvents.on('status-change', () => {
+      const status = global.ipfsdStatus;
+
+      const gatewayNavitem = exports.lookupNavItem('gateway');
+      const nodeNavitem = exports.lookupNavItem('node');
+
       gatewayNavitem.setState({
         status
       });
@@ -131,6 +143,9 @@ export class NavigationItem extends Component<ItemProps> {
             shell.beep();
             return;
           }
+
+          // Force stop any active alerts.
+          global.alertEvents.emit('alert-stop');
 
           onclick(this);
           history.push(name);

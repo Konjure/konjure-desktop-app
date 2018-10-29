@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 // @flow
-import CircularProgress from '@material-ui/core/CircularProgress';
 import React, { Component } from 'react';
 import IFrame from 'react-iframe';
 
@@ -21,6 +20,8 @@ const { sha256bs58HashString } = require('../utils/Crypto');
 const mainWindow = remote.getCurrentWindow();
 
 type Props = {};
+
+let externalBrowserInformed = false;
 
 export default class Gateway extends Component<Props> {
   static walk(dir) {
@@ -59,7 +60,7 @@ export default class Gateway extends Component<Props> {
     this.state = {
       preppedForUpload: null,
       pageURL: null,
-      statusBar: 'Waiting for upload'
+      statusBar: __('gateway.status.waiting')
     };
 
     this.prepareUpload = this.prepareUpload.bind(this);
@@ -77,7 +78,7 @@ export default class Gateway extends Component<Props> {
 
     this.setState({
       preppedForUpload: file,
-      statusBar: 'Ready to upload'
+      statusBar: __('gateway.status.ready')
     });
   }
 
@@ -87,15 +88,16 @@ export default class Gateway extends Component<Props> {
       return;
     }
 
+    const ipfs = global.ipfsController.getAPI();
+
     if (fs.lstatSync(preppedForUpload).isDirectory()) {
-      this.setStatusBar('Prepare files for upload...');
+      this.setStatusBar(__('gateway.status.preparing'));
       Gateway.walk(preppedForUpload).then(files => {
-        this.setStatusBar('Uploading files to IPFS');
+        this.setStatusBar(__('gateway.status.uploading'));
 
         const fileCount = files.length;
         let currentCount = 0;
 
-        const ipfs = global.ipfsController.getAPI();
         const konjid = sha256bs58HashString(`${new Date().getMilliseconds()}`);
         console.log(`Beginning site upload with KonjID: ${konjid}`);
 
@@ -118,7 +120,7 @@ export default class Gateway extends Component<Props> {
                 console.log(`Uploaded ${ipfsPath}`);
 
                 const percentage = (++currentCount / fileCount);
-                this.setStatusBar(`Uploading files to IPFS (${(percentage * 100).toFixed(2)}/%)`);
+                this.setStatusBar(__('gateway.status.upload-update', `${(percentage * 100).toFixed(2)}%`));
                 currentWindow.setProgressBar(percentage);
 
                 resolve();
@@ -145,14 +147,30 @@ export default class Gateway extends Component<Props> {
 
         return true;
       }).catch((err) => {
-        this.cancelPayload('Error during upload');
+        this.cancelPayload(__('gateway.status.error'));
         throw err;
       });
     } else {
-      global.ipfsController.saveToIPFS(fs.readFileSync(`${preppedForUpload}`), (err, data) => {
-        if (err === null) {
-          this.setWebpage(data[0].hash);
+      const { size } = fs.statSync(`${preppedForUpload}`);
+
+      ipfs.files.add(fs.readFileSync(`${preppedForUpload}`), {
+        progress: (prog) => {
+          const percentage = prog / size;
+
+          this.setStatusBar(__('gateway.status.upload-update', `${(percentage * 100).toFixed(2)}%`));
+          currentWindow.setProgressBar(percentage);
         }
+      }).then((response) => {
+        currentWindow.setProgressBar(0, { mode: 'none' });
+
+        const { hash } = response[0];
+        this.setWebpage(hash);
+
+        return true;
+      }).catch((err) => {
+        currentWindow.setProgressBar(0, { mode: 'none' });
+        this.cancelPayload(__('gateway.status.error'));
+        throw err;
       });
     }
 
@@ -163,13 +181,18 @@ export default class Gateway extends Component<Props> {
     console.log(`Published to IPFS, hash ${hash}`);
     const url = `https://ipfs.io/ipfs/${hash}`;
 
+    if (true) {
+      externalBrowserInformed = true;
+      global.alert(__('gateway.upload-info'), 10, 'success');
+    }
+
     this.state.pageURL = url;
     this.state.statusBar = <div
       className="underline-on-hover"
       onClick={() => {
         shell.openExternal(url);
       }}>
-      {__('gateway.open-in-browser')}
+      {__('gateway.status.open-in-browser')}
     </div>;
 
     this.forceUpdate();
@@ -185,7 +208,7 @@ export default class Gateway extends Component<Props> {
   cancelPayload(error = null) {
     this.setState({
       preppedForUpload: null,
-      statusBar: error === null ? 'Waiting for Upload' : `${error}`,
+      statusBar: error === null ? __('gateway.status.waiting') : `${error}`,
       pageURL: null
     });
   }
@@ -204,39 +227,48 @@ export default class Gateway extends Component<Props> {
     const { pageURL } = this.state;
 
     if (pageURL !== null) {
-      return <IFrame url={this.state.pageURL}>
-        <p>Error while attempting to display IFrame, view page externally with link below.</p>
-      </IFrame>;
+      return <IFrame url={pageURL}/>;
     }
 
-    return <div className="vertical-center-outer">
-      <div className="vertical-center-inner">
-        <img src="res/image/drop.png" className="center" alt="dragndrop"/>
-        <br/>
-        <h6 className="text-center">{__('gateway.dragdrop')}</h6>
-      </div>
-    </div>;
+    if (global.ipfsdStatus === 'down') {
+      return <div className="vertical-center-outer">
+        <div className="vertical-center-inner">
+          <h3 className="text-center">{__('gateway.node-down')}</h3>
+        </div>
+      </div>;
+    } else {
+      return <div className="vertical-center-outer">
+        <div className="vertical-center-inner">
+          <img src="res/image/drop.png" className="center" alt="dragndrop"/>
+          <br/>
+          <h6 className="text-center">{__('gateway.drag-drop')}</h6>
+        </div>
+      </div>;
+    }
   }
 
   render() {
     const { preppedForUpload, pageURL } = this.state;
+    const disabled = global.ipfsdStatus === 'down';
+
     return (
       <div className="k-content gateway" onDrop={event => {
+        if (disabled) {
+          return;
+        }
+
         event.preventDefault();
         this.prepareUpload(event.dataTransfer.files[0].path);
         return false;
       }}>
-        <div className="k-alert success">
-
-          <p>This is an example alert!</p>
-        </div>
         <div className="k-gateway-frame">
           <div className="k-website">
             {this.getWebsiteFrame()}
           </div>
         </div>
         <div className="k-gateway-toolbar">
-          <button type='button' className="button k-gateway-button slight-rounded material no-select upload-button left"
+          <button type='button' className={`button k-gateway-button slight-rounded material
+          no-select upload-button left ${disabled ? 'disabled' : ''}`}
                   onClick={() => {
                     const defaultpath = preppedForUpload != null ? preppedForUpload : os.homedir();
                     dialog.showOpenDialog(mainWindow, {
@@ -252,7 +284,8 @@ export default class Gateway extends Component<Props> {
 
                       this.prepareUpload(fileNames[0]);
                     });
-                  }}>
+                  }}
+                  disabled={disabled}>
             <div>{this.getUploadText()}</div>
           </button>
           <h5 id="percent-uploaded"> {this.state.statusBar}</h5>

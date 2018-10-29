@@ -10,13 +10,16 @@
  *
  * @flow
  */
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, Tray, Menu} from 'electron';
 import MenuBuilder from './menu';
 
 const path = require('path');
 
 let mainWindow = null;
 let splashWindow = null;
+
+let tray;
+let quitting = false;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -46,6 +49,10 @@ const installExtensions = async () => {
  * Add event listeners...
  */
 
+app.on('before-quit', () => {
+  quitting = true;
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -54,7 +61,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-function buildWindows() {
+function initApp() {
   splashWindow = new BrowserWindow({
     width: 340,
     height: 510,
@@ -86,8 +93,6 @@ function buildWindows() {
       throw new Error('"mainWindow" is not defined');
     }
 
-    mainWindow.webContents.openDevTools();
-
     ipcMain.on('ipfs-finish-init', () => {
       if (splashWindow.isDestroyed()) {
         return;
@@ -99,9 +104,31 @@ function buildWindows() {
     });
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  mainWindow.on('close', (event) => {
+    if (!quitting) {
+      event.preventDefault();
+      mainWindow.hide();
+      return false;
+    }
   });
+}
+
+function setupTray() {
+  tray = new Tray(path.join(__dirname, 'res', 'image', 'window', 'icon.png'));
+
+  tray.setContextMenu(Menu.buildFromTemplate([
+    {
+      label: 'Show App', click: () => {
+        mainWindow.show();
+      }
+    },
+    {
+      label: 'Quit', click: () => {
+        quitting = true;
+        app.quit();
+      }
+    }
+  ]));
 }
 
 app.on('ready', async () => {
@@ -112,7 +139,8 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  buildWindows();
+  initApp();
+  setupTray();
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

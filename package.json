@@ -2,6 +2,10 @@
   "name": "konjure-desktop-app",
   "productName": "KonjureWebsiteBuilder",
   "version": "0.1.0",
+  "author": "Connor Hollasch <connor@konjure.org> (https://konjure.org)",
+  "contributors": [
+    "Kai Micah Mills <kai@konjure.org> (https://konjure.org)"
+  ],
   "description": "Konjure's desktop application for the Konjure website builder.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -58,7 +62,7 @@
     ]
   },
   "build": {
-    "productName": "KonjureDesktopApp",
+    "productName": "Konjure Desktop App",
     "appId": "org.konjure.desktopapp",
     "files": [
       "dist/",
@@ -89,7 +93,8 @@
     "win": {
       "target": [
         "nsis",
-        "msi"
+        "msi",
+        "zip"
       ],
       "icon": "resources/icon.ico"
     },
@@ -100,7 +105,8 @@
         "snap",
         "AppImage"
       ],
-      "category": "Development"
+      "category": "Development",
+      "maintainer": "Connor Hollasch <connor@hollasch.net> (https://konjure.org/)"
     },
     "directories": {
       "buildResources": "resources",

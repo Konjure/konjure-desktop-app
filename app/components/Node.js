@@ -67,28 +67,48 @@ const StyledSlider = withStyles({
   }
 })(Slider);
 
+let statusIsChanging = false;
+let sliderNoopAlerted = false;
+
 export default class Node extends Component {
   constructor(props) {
     super(props);
 
-    global.ipfsStatusEvents.on('status-change', () => {
-      const status = global.ipfsdStatus;
-      exports.nodeStatus = status !== 'down';
-
-      this.forceUpdate();
-    });
-
     this.state = {};
 
     this.toggleNode = this.toggleNode.bind(this);
+    this.statusChangeListener = this.statusChangeListener.bind(this);
+
+    global.ipfsStatusEvents.on('status-change', this.statusChangeListener);
+  }
+
+  componentWillUnmount() {
+    global.ipfsStatusEvents.removeListener('status-change', this.statusChangeListener);
+  }
+
+  statusChangeListener() {
+    const status = global.ipfsdStatus;
+    exports.nodeStatus = status !== 'down';
+
+    if (status === 'up' || status === 'down') {
+      statusIsChanging = false;
+    }
+
+    this.forceUpdate();
   }
 
   toggleNode() {
+    if (statusIsChanging) {
+      return;
+    }
+
     const status = global.ipfsdStatus;
 
     if (status === 'waiting') {
       return;
     }
+
+    statusIsChanging = true;
 
     if (status === 'up') {
       exports.nodeStatus = false;
@@ -152,6 +172,10 @@ export default class Node extends Component {
                       max={slider.max}
                       className={`slider ${slider.title.toLowerCase()}`}
                       onChange={(evt, value) => {
+                        if (!sliderNoopAlerted) {
+                          sliderNoopAlerted = true;
+                          global.alert(__('node.valueWarning'), 7, 'warning');
+                        }
                         const state = {};
                         state[slider.title] = value;
                         this.setState(state);
@@ -163,20 +187,17 @@ export default class Node extends Component {
           }
         </div>
         <div className='k-node-right'>
-          {
-            sliders.map((slider) =>
-              <div className='k-slider'>
-                <div className='vertical-center-outer'>
-                  <div className='vertical-center-inner'>
-                    <input className='display-amount' id={slider.id} readOnly value={(() => {
-                      const val = this.state[slider.title] || slider.max;
-                      return slider.format(val);
-                    })()}/>
-                  </div>
+          {sliders.map((slider) =>
+            <div className='k-slider' key={slider.id}>
+              <div className='vertical-center-outer'>
+                <div className='vertical-center-inner'>
+                  <input className='display-amount' id={slider.id} readOnly value={(() => {
+                    const val = this.state[slider.title] || slider.max;
+                    return slider.format(val);
+                  })()}/>
                 </div>
               </div>
-            )
-          }
+            </div>)}
         </div>
       </div>
     );

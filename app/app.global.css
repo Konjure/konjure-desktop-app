@@ -24,9 +24,6 @@ textarea :focus {
 
 img {
   -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
 }
 
 .button:hover {
@@ -37,7 +34,7 @@ img {
   height: 26px;
   width: 100%;
   position: relative;
-  z-index: 10;
+  z-index: 2147483638;
   background-color: #191919;
   -webkit-app-region: drag;
 }
@@ -168,7 +165,7 @@ img {
 .k-website {
   height: 100%;
   width: 100%;
-  position: relative;
+  position: absolute;
   z-index: 1;
 }
 
@@ -495,15 +492,6 @@ input:checked + .node-slider::before {
   cursor: default;
 }
 
-.k-toolbar-left:hover img {
-  opacity: 0.8;
-  filter: alpha(opacity=50);
-}
-
-.k-toolbar-left:hover {
-  background-color: #222;
-}
-
 .k-toolbar-button:hover {
   background-color: #333;
   cursor: pointer;
@@ -522,6 +510,7 @@ input:checked + .node-slider::before {
   padding: 10px;
   border-radius: 5px;
   border: 2px solid #777;
+  z-index: 9999;
 }
 
 .k-alert.success {
@@ -537,4 +526,30 @@ input:checked + .node-slider::before {
 .k-alert.error {
   color: #e03a3a;
   border-color: #e03a3a;
+}
+
+.fade-in {
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.4s;
+}
+
+.fade-out {
+  opacity: 0;
+  animation-name: fadeOutOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.4s;
+}
+
+@keyframes fadeInOpacity {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOutOpacity {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }

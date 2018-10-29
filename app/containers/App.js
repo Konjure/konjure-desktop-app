@@ -13,6 +13,32 @@ const { ipcRenderer } = require('electron');
 
 const EventEmitter = require('events');
 
+function initAlerts() {
+  let alerting = false;
+
+  const events = new EventEmitter();
+  global.alertEvents = events;
+
+  global.alert = (alert, time, level = 'success') => {
+    if (alerting) {
+      return;
+    }
+
+    alerting = true;
+    events.emit('alert-start', alert, level);
+
+    setTimeout(() => {
+      if (!alerting) {
+        return;
+      }
+
+      events.emit('alert-stop');
+      alerting = false;
+    }, time * 1000);
+  };
+}
+
+initAlerts();
 initIPFS();
 
 const navigation = [
@@ -26,6 +52,43 @@ const navigation = [
 ];
 
 export default class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      alert: null,
+      alertLevel: null,
+      fadeOut: false
+    };
+
+    this.getAlertDiv = this.getAlertDiv.bind(this);
+  }
+
+  componentDidMount() {
+    global.alertEvents.on('alert-start', (alert, alertLevel = 'success') => {
+      this.setState({ alert, alertLevel, fadeOut: false });
+    });
+
+    global.alertEvents.on('alert-stop', () => {
+      if (this.state.alert !== null) {
+        this.setState({ fadeOut: true });
+      }
+    });
+  }
+
+  getAlertDiv() {
+    const { alert, alertLevel, fadeOut } = this.state;
+
+    if (alert !== null || fadeOut) {
+      const fadeClass = fadeOut ? 'fade-out' : 'fade-in';
+      return <div className={`${fadeClass} k-alert ${alertLevel}`}>
+        <p>{alert}</p>
+      </div>;
+    }
+
+    return <div />;
+  }
+
   render() {
     return (
       <div onDragOver={event => {
@@ -36,7 +99,8 @@ export default class App extends Component {
         return false;
       }}>
         <WindowControls/>
-        <Navigation tabs={navigation}/>
+        {this.getAlertDiv()}
+        < Navigation tabs={navigation}/>
         <Switch>
           <Route path={routes.NODE} component={CounterPage}/>
           <Route path={routes.GATEWAY} component={GatewayPage}/>

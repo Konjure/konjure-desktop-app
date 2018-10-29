@@ -40,12 +40,24 @@ exports.translations = {
 		cancel: 'Cancel',
 		publish: 'Publish',
     close: 'Close',
-		dragdrop: 'Drag & drop a zip file here',
-		'open-in-browser': 'Click to open in browser',
+		'drag-drop': 'Drag & drop a file for upload here',
 		'upload-window': {
 			'archive-file-types': 'Archive File Types',
 			'all-file-types': 'All File Types'
-		}
+		},
+    status: {
+		  ready: 'Ready for upload',
+      preparing: 'Preparing files for upload...',
+      uploading: 'Uploading files to IPFS',
+      'upload-update': 'Uploading files to IPFS (%s)',
+      error: 'Error during upload',
+      'open-in-browser': 'Click to open in browser',
+      waiting: 'Waiting for upload'
+    },
+    'iframe-error': 'Error while attempting to display IFrame, view page externally with link below.',
+    'upload-info': 'Your website was uploaded successfully, although there is no internal browser, we\'re ' +
+      'trying to display it here. For a better view, click "Click to open in browser"',
+    'node-down': 'Please start the node to upload a website.'
 	},
   node: {
 	  title: 'Konjure Node',
@@ -61,6 +73,7 @@ exports.translations = {
     memory: {
 	    title: 'MEMORY',
       description: 'Select how much RAM Konjure can use (%s total)'
-    }
+    },
+    valueWarning: 'Changing these values does nothing at the moment, but feel free to play around with them!'
   }
 };
