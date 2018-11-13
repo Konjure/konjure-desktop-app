@@ -49,7 +49,7 @@ export default merge.smart(baseConfig, {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://localhost:${port}/`,
     'webpack/hot/only-dev-server',
-    require.resolve('../app/index')
+    require.resolve('../app/views/main/index')
   ],
 
   output: {
@@ -200,6 +200,18 @@ export default merge.smart(baseConfig, {
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader'
+      },
+      // JSON
+      {
+        type: 'javascript/auto',
+        test: /\.json$/,
+        include: [
+          path.resolve(__dirname, '..', 'app', 'lang', 'locales')
+        ],
+        use: {
+          loader: 'file-loader',
+          options: { name: '[name].[ext]' },
+        }
       }
     ]
   },

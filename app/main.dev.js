@@ -85,7 +85,7 @@ function initApp() {
     frame: false
   });
 
-  splashWindow.loadURL(path.join(`file://${__dirname}`, 'splash', 'splash.html'));
+  splashWindow.loadURL(path.join(`file://${__dirname}`, 'views', 'splash', 'splash.html'));
   mainWindow.loadURL(path.join(`file://${__dirname}`, 'app.html'));
 
   mainWindow.webContents.on('did-finish-load', () => {

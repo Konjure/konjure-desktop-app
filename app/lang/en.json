@@ -1,0 +1,76 @@
+{
+  "language": "English",
+  "navigation": {
+    "gateway": {
+      "title": "Gateway",
+      "description": "Upload your gateway"
+    },
+    "node": {
+      "title": "Node",
+      "description": "Peer-to-peer network"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Manage your gateway"
+    },
+    "bazaar": {
+      "title": "Bazaar",
+      "description": "Plugin marketplace"
+    },
+    "hosting": {
+      "title": "Hosting",
+      "description": "Usage and billing"
+    },
+    "labs": {
+      "title": "Labs",
+      "description": "Development kit"
+    },
+    "about-me": {
+      "watermark": "Konjure Desktop App v{{version}}"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Application settings"
+    }
+  },
+  "gateway": {
+    "upload": "Upload your website",
+    "cancel": "Cancel",
+    "publish": "Publish",
+    "close": "Close",
+    "drag-drop": "Drag & drop a file for upload here",
+    "upload-window": {
+      "archive-file-types": "Archive File Types",
+      "all-file-types": "All File Types"
+    },
+    "status": {
+      "ready": "Ready for upload",
+      "preparing": "Preparing files for upload...",
+      "uploading": "Uploading files to IPFS",
+      "upload-update": "Uploading files to IPFS (%s)",
+      "error": "Error during upload",
+      "open-in-browser": "Click to open in browser",
+      "waiting": "Waiting for upload"
+    },
+    "iframe-error": "Error while attempting to display IFrame, view page externally with link below.",
+    "upload-info": "Your website was uploaded successfully, although there is no internal browser, we're trying to display it here. For a better view, click 'Click to open in browser'",
+    "node-down": "Please start the node to upload a website."
+  },
+  "node": {
+    "title": "Konjure Node",
+    "status": {
+      "up": "ON",
+      "down": "OFF",
+      "starting": "STARTING"
+    },
+    "cpu": {
+      "title": "CPU",
+      "description": "Select how much CPU you would like Konjure to use"
+    },
+    "memory": {
+      "title": "MEMORY",
+      "description": "Select how much RAM Konjure can use ({{ram}} total)"
+    },
+    "valueWarning": "Changing these values does nothing at the moment, but feel free to play around with them!"
+  }
+}

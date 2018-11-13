@@ -1,4 +1,4 @@
-import counter from '../../app/reducers/counter';
+import counter from '../../app/views/main/reducers/counter';
 import {
   INCREMENT_COUNTER,
   DECREMENT_COUNTER
