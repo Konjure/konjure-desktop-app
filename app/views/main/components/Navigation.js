@@ -17,6 +17,7 @@ type ItemProps = {
   current?: boolean,
   usable?: boolean,
   name: string,
+  noStatus?: boolean,
   onclick: (1) => void
 };
 
@@ -161,7 +162,7 @@ export class NavigationItem extends Component<ItemProps> {
               {name}
             </Trans>
           </span>
-          <div className={`k-status ${status}`}/>
+          <div className={(this.props.noStatus ? '' : `k-status ${status}`)}/>
         </div>
       )}/>
     );

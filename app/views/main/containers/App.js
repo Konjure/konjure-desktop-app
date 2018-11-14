@@ -4,8 +4,9 @@ import { Route, Switch } from 'react-router';
 import WindowControls from '../components/WindowControls';
 import Navigation from '../components/Navigation';
 import routes from '../constants/routes';
-import CounterPage from './NodePage';
+import NodePage from './NodePage';
 import GatewayPage from './GatewayPage';
+import SettingsPage from './SettingsPage';
 import IPFSController from '../ipfs/IPFSController';
 import IPFSDaemon from '../ipfs/IPFSDaemon';
 
@@ -48,7 +49,7 @@ const navigation = [
   { name: 'bazaar', usable: false },
   { name: 'hosting', usable: false },
   { name: 'labs', usable: false },
-  { name: 'settings', usable: false }
+  { name: 'settings', usable: true, map: routes.SETTINGS, noStatus: true }
 ];
 
 export default class App extends Component {
@@ -100,9 +101,10 @@ export default class App extends Component {
       }}>
         <WindowControls/>
         {this.getAlertDiv()}
-        < Navigation tabs={navigation}/>
+        <Navigation tabs={navigation}/>
         <Switch>
-          <Route path={routes.NODE} component={CounterPage}/>
+          <Route path={routes.NODE} component={NodePage}/>
+          <Route path={routes.SETTINGS} component={SettingsPage}/>
           <Route path={routes.GATEWAY} component={GatewayPage}/>
         </Switch>
       </div>

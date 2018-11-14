@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/no-duplicates
-/* eslint-disable import/no-unresolved */
-
 import i18n from 'i18next';
 import Backend from 'i18next-sync-fs-backend';
 import { reactI18nextModule } from 'react-i18next';

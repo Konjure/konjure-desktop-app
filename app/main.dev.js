@@ -11,9 +11,9 @@
  * @flow
  */
 import {app, BrowserWindow, ipcMain, Tray, Menu} from 'electron';
-import MenuBuilder from './menu';
+import path from 'path';
 
-const path = require('path');
+import MenuBuilder from './menu';
 
 let mainWindow = null;
 let splashWindow = null;
