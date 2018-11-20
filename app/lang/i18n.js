@@ -5,7 +5,7 @@ import { reactI18nextModule } from 'react-i18next';
 import path from 'path';
 
 // Load all language files.
-import './en';
+import '../views/main/lang/en';
 
 i18n
   .use(Backend)

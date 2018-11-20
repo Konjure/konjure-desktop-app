@@ -30,34 +30,6 @@ img {
   cursor: auto;
 }
 
-.k-toolbar {
-  height: 26px;
-  width: 100%;
-  position: relative;
-  z-index: 2147483638;
-  background-color: #191919;
-  -webkit-app-region: drag;
-}
-
-.k-toolbar-left {
-  float: left;
-  height: 100%;
-  width: 60px;
-  z-index: 10;
-  -webkit-app-region: no-drag;
-}
-
-.k-toolbar img {
-  height: 16px;
-  margin-top: 5px;
-  margin-left: 5px;
-}
-
-.k-toolbar-button img {
-  margin-left: 5px;
-  opacity: 0.5;
-}
-
 .k-gateway-frame > img {
   position: absolute;
   bottom: -250px;
@@ -65,34 +37,9 @@ img {
   transform: rotate(-5deg);
 }
 
-.k-toolbar-button {
-  height: 100%;
-  width: 26px;
-  float: left;
-  -webkit-app-region: no-drag;
-}
-
-.k-toolbar-right {
-  height: 100%;
-  float: right;
-}
-
-#close:hover {
-  background-color: #e03a3a;
-}
-
 .k-wrapper {
   height: calc(100% - 26px);
   width: 100%;
-}
-
-.k-nav {
-  height: 100%;
-  width: 200px;
-  position: relative;
-  float: left;
-  overflow: hidden;
-  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
 }
 
 .k-sandbox {
@@ -173,11 +120,6 @@ iframe {
   background-color: white;
 }
 
-.k-menu {
-  position: relative;
-  z-index: 1;
-}
-
 .k-option {
   height: 60px;
   width: 100%;
@@ -246,43 +188,6 @@ iframe {
 
 .k-status.unavailable {
   background-color: #222;
-}
-
-.k-profile {
-  height: 40px;
-  width: 180px;
-  background-color: #333;
-  position: absolute;
-  bottom: 38px;
-  left: 10px;
-  padding: 0;
-}
-
-.k-profile:hover {
-  background-color: #373737;
-  cursor: pointer;
-}
-
-.k-profile > img {
-  height: 40px;
-  width: 40px;
-  float: left;
-  border-right: 2px solid #222;
-}
-
-.k-profile h5 {
-  float: right;
-  color: #7ec31e;
-  padding-top: 11px;
-  padding-right: 10px;
-}
-
-.k-profile h5 img {
-  height: 15px;
-  width: 15px;
-  float: left;
-  margin-top: 2px;
-  margin-right: 3px;
 }
 
 .k-node-top {

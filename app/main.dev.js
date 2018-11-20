@@ -86,14 +86,13 @@ function initApp() {
   });
 
   splashWindow.loadURL(path.join(`file://${__dirname}`, 'views', 'splash', 'splash.html'));
-  mainWindow.loadURL(path.join(`file://${__dirname}`, 'app.html'));
+  mainWindow.loadURL(path.join(`file://${__dirname}`, 'views', 'main', 'app.html'));
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
+  let finishedLoading = false;
+  let ipfsReady = false;
 
-    ipcMain.on('ipfs-finish-init', () => {
+  function attemptDisplay () {
+    if (finishedLoading && ipfsReady) {
       if (splashWindow.isDestroyed()) {
         return;
       }
@@ -101,7 +100,21 @@ function initApp() {
       splashWindow.destroy();
       mainWindow.show();
       mainWindow.maximize();
-    });
+    }
+  }
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined');
+    }
+
+    finishedLoading = true;
+    attemptDisplay();
+  });
+
+  ipcMain.on('ipfs-finish-init', () => {
+    ipfsReady = true;
+    attemptDisplay();
   });
 
   mainWindow.on('close', (event) => {

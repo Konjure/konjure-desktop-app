@@ -1,24 +1,30 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
+import injectSheet from 'react-jss';
 import { Route } from 'react-router-dom';
 import { Trans, Interpolate } from 'react-i18next';
 import { shell } from 'electron';
-import { version } from '../../../../package';
+import { version } from '../../../../../package';
 
 // Images
-import placeholderProfile from '../../../res/image/placeholder-profile.png';
-import currency from '../../../res/image/currency.png';
+import placeholderProfile from '../../../../res/image/placeholder-profile.png';
+import currency from '../../../../res/image/currency.png';
 
-interface NavigationProps {
-  tabs: Array
-}
+// Styles
+import styles from './style';
+
+type NavigationProps = {
+  tabs: array,
+  classes: styles
+};
 
 type ItemProps = {
   current?: boolean,
   usable?: boolean,
-  name: string,
   noStatus?: boolean,
-  onclick: (1) => void
+  name: string,
+  onclick: (1) => void,
+  classes: styles
 };
 
 let currentlyOpen;
@@ -26,7 +32,7 @@ let currentlyOpen;
 exports.navitems = {};
 exports.lookupNavItem = (name) => exports.navitems[name.toLowerCase()];
 
-export default class Navigation extends Component<NavigationProps> {
+const navigation = class extends Component<NavigationProps> {
   static handleClick(obj) {
     if (currentlyOpen !== undefined) {
       currentlyOpen.setState({
@@ -74,18 +80,19 @@ export default class Navigation extends Component<NavigationProps> {
 
   render() {
     const {
-      tabs
+      tabs,
+      classes
     } = this.props;
 
     return (
-      <div className='k-nav'>
-        <div className='k-menu'>
+      <div className={classes.nav}>
+        <div className={classes.menu}>
           {
             tabs.map((obj) => <NavigationItem {...obj} key={`${obj.name}`}
                                               onclick={(sub) => Navigation.handleClick(sub)}/>)
           }
           <br/>
-          <div className='k-copyright'>
+          <div className={classes.copyright}>
             <Interpolate
               i18nKey='navigation.about-me.watermark'
               version={version}>
@@ -93,16 +100,19 @@ export default class Navigation extends Component<NavigationProps> {
             </Interpolate>
           </div>
         </div>
-        <div className='button k-profile material slight-rounded'>
+        <div className={`button ${classes.profile} material slight-rounded`}>
           <img src={placeholderProfile} className='no-select' alt='profile-pic'/>
           <h5><img src={currency} className='no-select' alt=''/> 0</h5>
         </div>
       </div>
     );
   }
-}
+};
 
-export class NavigationItem extends Component<ItemProps> {
+const Navigation = injectSheet(styles)(navigation);
+export default Navigation;
+
+const navigationItem = class extends Component<ItemProps> {
   constructor(props) {
     super(props);
 
@@ -128,7 +138,9 @@ export class NavigationItem extends Component<ItemProps> {
   render() {
     const {
       name,
-      onclick
+      noStatus,
+      onclick,
+      classes
     } = this.props;
 
     const {
@@ -162,14 +174,18 @@ export class NavigationItem extends Component<ItemProps> {
               {name}
             </Trans>
           </span>
-          <div className={(this.props.noStatus ? '' : `k-status ${status}`)}/>
+          <div className={(noStatus ? '' : `k-status ${status}`)}/>
         </div>
       )}/>
     );
   }
-}
-
-NavigationItem.defaultProps = {
-  current: false,
-  usable: false
 };
+
+navigationItem.defaultProps = {
+  current: false,
+  usable: false,
+  noStatus: false
+};
+
+const NavigationItem = injectSheet(styles)(navigationItem);
+

@@ -1,46 +1,17 @@
 // @flow
 import React, { Component } from 'react';
+import { ipcRenderer } from  'electron';
 import { Route, Switch } from 'react-router';
-import WindowControls from '../components/WindowControls';
-import Navigation from '../components/Navigation';
+import EventEmitter from 'events';
+
+import WindowControls from '../components/controls/WindowControls';
+import Navigation from '../components/navigation/Navigation';
 import routes from '../constants/routes';
 import NodePage from './NodePage';
 import GatewayPage from './GatewayPage';
 import SettingsPage from './SettingsPage';
 import IPFSController from '../ipfs/IPFSController';
 import IPFSDaemon from '../ipfs/IPFSDaemon';
-
-const { ipcRenderer } = require('electron');
-
-const EventEmitter = require('events');
-
-function initAlerts() {
-  let alerting = false;
-
-  const events = new EventEmitter();
-  global.alertEvents = events;
-
-  global.alert = (alert, time, level = 'success') => {
-    if (alerting) {
-      return;
-    }
-
-    alerting = true;
-    events.emit('alert-start', alert, level);
-
-    setTimeout(() => {
-      if (!alerting) {
-        return;
-      }
-
-      events.emit('alert-stop');
-      alerting = false;
-    }, time * 1000);
-  };
-}
-
-initAlerts();
-initIPFS();
 
 const navigation = [
   { name: 'gateway', usable: true, current: true, map: routes.GATEWAY },
@@ -112,6 +83,31 @@ export default class App extends Component {
   }
 }
 
+function initAlerts() {
+  let alerting = false;
+
+  const events = new EventEmitter();
+  global.alertEvents = events;
+
+  global.alert = (alert, time, level = 'success') => {
+    if (alerting) {
+      return;
+    }
+
+    alerting = true;
+    events.emit('alert-start', alert, level);
+
+    setTimeout(() => {
+      if (!alerting) {
+        return;
+      }
+
+      events.emit('alert-stop');
+      alerting = false;
+    }, time * 1000);
+  };
+}
+
 function initIPFS() {
   global.ipfsDaemon = new IPFSDaemon();
   global.ipfsController = new IPFSController();
@@ -148,8 +144,15 @@ function initIPFS() {
   global.ipfsStatusEvents.emit('status-change');
 
   if (!global.ipfsDaemon.running()) {
-    global.startAndBindIPFS();
+    if (process.env.NODE_ENV === 'production') {
+      global.startAndBindIPFS();
+    } else {
+      ipcRenderer.send('ipfs-finish-init');
+    }
   } else {
     global.ipfsController.bindAPI(global.ipfsDaemon.getAPI());
   }
 }
+
+initAlerts();
+initIPFS();
